@@ -1,0 +1,1774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIRAGE Algae Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06051a; --bg2:#0b0a26; --glass:rgba(255,255,255,.035); --glass2:rgba(255,255,255,.065);
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+  --text:#eeeefe; --muted:#a6a9cc; --dim:#7174a0;
+  --v:#8b5cf6; --v2:#a78bfa; --c:#22d3ee;
+  --grad:linear-gradient(90deg,#a78bfa 0%,#22d3ee 100%);
+  --grad2:linear-gradient(135deg,#7c3aed 0%,#0891b2 100%);
+  --green:#34d399; --cyan:#22d3ee; --amber:#fbbf24; --red:#f87171; --purple:#a78bfa; --pink:#f472b6;
+  --cityA:#fb923c; --cityB:#38bdf8;
+  --head:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --sans:"Inter","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,ui-monospace,monospace;
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.6 var(--sans);min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(900px 600px at 10% -10%,rgba(139,92,246,.28),transparent 60%),
+  radial-gradient(900px 600px at 100% 10%,rgba(34,211,238,.18),transparent 60%),
+  radial-gradient(800px 700px at 50% 120%,rgba(139,92,246,.16),transparent 60%),var(--bg)}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;
+  mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 75%)}
+button{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+code{font-family:var(--mono);font-size:.9em;color:var(--v2)}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.container{max-width:1400px;margin:0 auto;padding:0 28px}
+@media (max-width:600px){.container{padding:0 16px}}
+
+/* ---------- navbar ---------- */
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(6,5,26,.72);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:22px;height:70px}
+.logo{display:flex;align-items:center;gap:10px;font:700 21px var(--head);letter-spacing:.5px}
+.logo-mark{width:38px;height:38px;border-radius:12px;background:var(--grad2);display:grid;place-items:center;box-shadow:0 0 28px rgba(139,92,246,.55)}
+.links{display:flex;gap:4px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.links::-webkit-scrollbar{display:none}
+.links a{padding:8px 14px;border-radius:999px;font:600 14.5px var(--sans);color:var(--muted);white-space:nowrap;transition:.2s}
+.links a:hover{color:var(--text);background:var(--glass2)}
+.links a.on{color:#fff;background:rgba(139,92,246,.2);box-shadow:inset 0 0 0 1px rgba(167,139,250,.45)}
+.nav-r{display:flex;gap:10px;align-items:center}
+@media (max-width:1100px){.nav-r .pill{display:none}}
+@media (max-width:760px){.links{display:none}.nav-r{margin-left:auto}}
+
+/* ---------- buttons ---------- */
+.btn{border:1px solid var(--line2);background:var(--glass2);padding:10px 18px;border-radius:12px;cursor:pointer;transition:.18s;white-space:nowrap;font-weight:600;font-size:15px}
+.btn:hover{border-color:rgba(167,139,250,.6);background:rgba(139,92,246,.14);transform:translateY(-1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:var(--grad2);border-color:transparent;color:#fff;box-shadow:0 8px 30px -8px rgba(139,92,246,.7)}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn.primary.pulse{animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,.55)}50%{box-shadow:0 0 0 10px rgba(139,92,246,0)}}
+.btn.ghost{background:transparent}
+.btn.big{padding:14px 24px;font-size:16.5px;border-radius:14px}
+.btn.warn{border-color:rgba(251,146,60,.45);background:rgba(251,146,60,.1);color:#fed7aa}
+.btn.warn:hover{background:rgba(251,146,60,.2)}
+.btn.wx{border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.08);color:#bae6fd}
+.btn.danger{border-color:rgba(248,113,113,.5);background:rgba(248,113,113,.1);color:#fecaca}
+.btn.hold{border-color:rgba(244,114,182,.45);background:rgba(244,114,182,.08);color:#fbcfe8;user-select:none;touch-action:none}
+.btn.hold.on{background:rgba(244,114,182,.35);border-color:var(--pink)}
+.btn.small{padding:7px 12px;font-size:13.5px;border-radius:10px}
+.btn.test.on{background:rgba(52,211,153,.2);border-color:var(--green);color:#a7f3d0}
+.seg{display:flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--glass)}
+.seg button{border:0;background:transparent;padding:10px 13px;cursor:pointer;font:700 13.5px var(--mono);color:var(--muted)}
+.seg button.on{background:var(--grad2);color:#fff}
+.pill{font:700 11.5px var(--mono);letter-spacing:.8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(251,191,36,.45);color:#fde68a;background:rgba(251,191,36,.08);white-space:nowrap}
+.pill.live{border-color:rgba(52,211,153,.6);color:#a7f3d0;background:rgba(52,211,153,.12)}
+.pill.off{border-color:rgba(248,113,113,.6);color:#fecaca;background:rgba(248,113,113,.1)}
+.pill.v{border-color:rgba(167,139,250,.5);color:#ddd6fe;background:rgba(139,92,246,.12)}
+
+/* ---------- hero ---------- */
+.hero{padding:78px 0 40px;display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center}
+@media (max-width:1000px){.hero{grid-template-columns:1fr;padding-top:48px}}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:700 12.5px var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--v2);padding:6px 14px;border-radius:999px;border:1px solid rgba(167,139,250,.35);background:rgba(139,92,246,.1)}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.hero h1{font:700 clamp(40px,5.6vw,72px)/1.04 var(--head);letter-spacing:-1.5px;margin:20px 0 18px}
+.hero p.lead{font-size:19px;color:var(--muted);max-width:620px;margin:0 0 28px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.trust{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;color:var(--dim);font:600 13.5px var(--sans)}
+.trust span:before{content:"✦ ";color:var(--v2)}
+.console-card{border-radius:24px;padding:22px;background:linear-gradient(160deg,rgba(139,92,246,.16),rgba(34,211,238,.07));border:1px solid rgba(167,139,250,.3);box-shadow:0 30px 80px -30px rgba(139,92,246,.6);position:relative;overflow:hidden}
+.console-card:before{content:"";position:absolute;inset:-1px;border-radius:24px;padding:1px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6;pointer-events:none}
+.cc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cc-dots{display:flex;gap:6px}.cc-dots i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.cc-dots i:nth-child(2){background:#febc2e}.cc-dots i:nth-child(3){background:#28c840}
+.cc-title{font:600 13px var(--mono);color:var(--muted)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:rgba(6,5,26,.55);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.stat .k{font:600 11.5px var(--mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.stat .v{font:700 28px/1.2 var(--head);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat.wide{grid-column:1/-1}
+.ticker{margin-top:12px;font:13px/1.5 var(--mono);color:#c4b5fd;background:rgba(6,5,26,.6);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* how it works strip */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:30px 0 10px}
+@media (max-width:900px){.flow{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.flow{grid-template-columns:1fr}}
+.flow-c{border:1px solid var(--line);background:var(--glass);border-radius:var(--r);padding:20px;position:relative;transition:.25s}
+.flow-c:hover{transform:translateY(-4px);border-color:rgba(167,139,250,.45);background:rgba(139,92,246,.08)}
+.flow-c .ix{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px;background:var(--grad2);margin-bottom:12px;box-shadow:0 8px 24px -8px rgba(139,92,246,.8)}
+.flow-c h4{margin:0 0 6px;font:700 19px var(--head)}
+.flow-c p{margin:0;color:var(--muted);font-size:14.5px}
+
+/* ---------- sections ---------- */
+.sec{padding:80px 0 10px}
+.sec-head{max-width:860px;margin-bottom:30px}
+.sec-title{font:700 clamp(32px,3.8vw,48px)/1.1 var(--head);letter-spacing:-1px;margin:16px 0 10px}
+.sec-sub{font-size:17.5px;color:var(--muted);margin:0}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:var(--r);padding:22px;position:relative;transition:border-color .3s,box-shadow .3s;backdrop-filter:blur(6px)}
+.ct{margin:0 0 16px;font:700 19px var(--head);display:flex;align-items:center;gap:10px;letter-spacing:-.2px}
+.ct .tag{margin-left:auto}
+.ct .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;background:rgba(139,92,246,.18);border:1px solid rgba(167,139,250,.3)}
+.grid{display:grid;gap:22px;margin-top:22px}
+.grid>*{min-width:0}
+.g-main{grid-template-columns:1.25fr 1fr 1fr}
+.g-3{grid-template-columns:1fr 1fr 1fr}
+.g-tl{grid-template-columns:2fr 1fr}
+.g-2{grid-template-columns:1fr 1fr}
+.g-21{grid-template-columns:1.4fr 1fr}
+@media (max-width:1200px){.g-main{grid-template-columns:1fr 1fr}.g-main .cmd{grid-column:1/-1}.g-3{grid-template-columns:1fr 1fr}.g-3>:last-child{grid-column:1/-1}.g-tl,.g-21{grid-template-columns:1fr}}
+@media (max-width:760px){.g-main,.g-3,.g-2{grid-template-columns:1fr}.g-3>:last-child{grid-column:auto}}
+
+/* sim control bar */
+.simbar{position:sticky;top:78px;z-index:30;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:18px;border:1px solid rgba(167,139,250,.3);background:rgba(11,10,38,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 18px 50px -20px rgba(0,0,0,.8);margin-bottom:22px}
+@media (max-width:1000px){.simbar{position:static}}
+.clock{display:flex;flex-direction:column;padding:0 6px}
+.clock .lbl{font:700 10.5px var(--mono);text-transform:uppercase;letter-spacing:1.6px;color:var(--dim)}
+.clock .v{font:700 20px var(--mono)}
+.simbar .sp{flex:1}
+.live-dot{display:inline-flex;align-items:center;gap:8px;font:700 12px var(--mono);color:var(--muted);letter-spacing:1px}
+.live-dot i{width:9px;height:9px;border-radius:50%;background:#555}
+.live-dot.on i{background:var(--green);box-shadow:0 0 12px var(--green);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.35}}
+
+/* scene */
+.scene{padding:0;overflow:hidden;border-color:rgba(167,139,250,.28);box-shadow:0 30px 90px -40px rgba(139,92,246,.7)}
+#scene{display:block;width:100%;height:auto;aspect-ratio:1200/480;background:#06101a}
+.scene-alert{position:absolute;left:50%;top:3%;transform:translateX(-50%);background:rgba(60,10,20,.92);border:1px solid var(--red);color:#fecaca;padding:7px 14px;border-radius:12px;font-weight:600;font-size:13px;display:none;max-width:40%;text-align:center;box-shadow:0 0 30px rgba(248,113,113,.4)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;padding:12px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
+.legend i.d{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px);height:2px}
+
+/* command center */
+.badge{display:inline-flex;align-items:center;gap:9px;font:700 13.5px var(--mono);letter-spacing:.8px;padding:8px 14px;border-radius:11px;border:1px solid;transition:.2s}
+.badge .led{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
+.m-MONITORING{color:var(--green);border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08)}
+.m-HOLD{color:var(--cyan);border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.08)}
+.m-ARMED{color:var(--purple);border-color:rgba(167,139,250,.55);background:rgba(139,92,246,.14)}
+.m-PUMPING{color:#6ee7b7;border-color:var(--green);background:rgba(52,211,153,.16);animation:pulseg 1.2s infinite}
+@keyframes pulseg{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}50%{box-shadow:0 0 0 8px rgba(52,211,153,0)}}
+.m-SETTLING{color:var(--amber);border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.08)}
+.m-CRITICAL{color:#fecaca;border-color:var(--red);background:rgba(248,113,113,.15);animation:crit 1s infinite}
+@keyframes crit{50%{box-shadow:0 0 18px rgba(248,113,113,.5)}}
+.cmd-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.next{margin-left:auto;font:13px var(--mono);color:var(--dim)}
+.headline{font:700 24px/1.25 var(--head);margin:16px 0 14px;letter-spacing:-.3px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
+.tile{background:rgba(6,5,26,.5);border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-width:0}
+.tile .lbl{font:700 10.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:1.2px}
+.tile .v{font:700 19px var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .s{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog{height:7px;border-radius:5px;background:rgba(255,255,255,.06);margin:14px 0 2px;overflow:hidden}
+.prog>div{height:100%;width:0;background:var(--grad);transition:width .15s}
+.why{margin:14px 0 10px;padding:14px 16px;border-left:3px solid var(--green);background:rgba(52,211,153,.07);border-radius:0 14px 14px 0;font-size:15.5px}
+.why.ARMED{border-color:var(--purple);background:rgba(139,92,246,.1)}.why.CRITICAL{border-color:var(--red);background:rgba(248,113,113,.09)}.why.SETTLING{border-color:var(--amber);background:rgba(251,191,36,.07)}.why.HOLD{border-color:var(--cyan)}
+details.nums summary{cursor:pointer;color:var(--v2);font-weight:600;font-size:14px;user-select:none}
+.numbers{font:12.5px/1.7 var(--mono);color:#d4d6f5;background:rgba(4,3,18,.7);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;white-space:pre-wrap;overflow-x:auto}
+.prio-wrap{overflow-x:auto}
+table.prio{width:100%;border-collapse:collapse;margin-top:14px;font:12.5px var(--mono)}
+table.prio th{font:700 10.5px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--dim);text-align:right;padding:6px;border-bottom:1px solid var(--line)}
+table.prio th:first-child,table.prio td:first-child{text-align:left;white-space:nowrap}
+table.prio td{text-align:right;padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.05)}
+.ainote{margin-top:16px;font-size:13.5px;color:var(--muted);display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(139,92,246,.08);border:1px solid rgba(167,139,250,.25)}
+.ainote b{color:var(--text)}
+
+/* city cards */
+.card.role-recv{border-color:rgba(52,211,153,.7);box-shadow:0 0 40px -10px rgba(52,211,153,.5)}
+.card.role-don{border-color:rgba(251,191,36,.6);box-shadow:0 0 40px -10px rgba(251,191,36,.4)}
+.card.role-sched{border-color:rgba(167,139,250,.7);box-shadow:0 0 40px -10px rgba(139,92,246,.5)}
+.card.role-need{border-color:rgba(248,113,113,.6)}
+.city-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.city-head h3{margin:0;font:700 22px var(--head)}
+.city-head h3 small{display:block;color:var(--muted);font:500 13px var(--sans)}
+.cdot{width:14px;height:14px;border-radius:5px;box-shadow:0 0 14px currentColor}
+.chip{margin-left:auto;font:700 11.5px var(--mono);letter-spacing:.8px;padding:5px 10px;border-radius:9px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+.chip.ok{color:var(--green);border-color:rgba(52,211,153,.45)}
+.chip.risk{color:var(--amber);border-color:rgba(251,191,36,.5)}
+.chip.need{color:#fecaca;border-color:rgba(248,113,113,.6);background:rgba(248,113,113,.12)}
+.chip.recv{color:#6ee7b7;border-color:var(--green);background:rgba(52,211,153,.15)}
+.chip.don{color:var(--amber);border-color:rgba(251,191,36,.6);background:rgba(251,191,36,.12)}
+.chip.sched{color:var(--purple);border-color:rgba(167,139,250,.6)}
+.chip.spare{color:var(--cyan);border-color:rgba(34,211,238,.5)}
+.role{display:flex;gap:12px;align-items:center;border-radius:14px;padding:11px 14px;margin-bottom:14px;font-size:13.5px;border:1px solid var(--line);background:rgba(6,5,26,.45)}
+.role .ic{font:700 20px var(--mono);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.05);flex:none}
+.role b{display:block;font:700 13px var(--mono);letter-spacing:.8px}
+.role span{color:var(--muted)}
+.role.recv{border-color:rgba(52,211,153,.6);background:rgba(52,211,153,.1)}.role.recv .ic,.role.recv b{color:#6ee7b7}
+.role.don{border-color:rgba(251,191,36,.55);background:rgba(251,191,36,.09)}.role.don .ic,.role.don b{color:var(--amber)}
+.role.sched{border-color:rgba(167,139,250,.55);background:rgba(139,92,246,.12)}.role.sched .ic,.role.sched b{color:var(--purple)}
+.role.need{border-color:rgba(248,113,113,.55);background:rgba(248,113,113,.09)}.role.need .ic,.role.need b{color:#fecaca}
+.role.spare .ic,.role.spare b{color:var(--cyan)}
+.role.ok .ic,.role.ok b{color:var(--green)}
+.city-main{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.big .lbl{font:700 10.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:1.2px}
+.big .val{font:700 42px/1 var(--head)}
+.big .val u{text-decoration:none;font:500 14px var(--sans);color:var(--muted);margin-left:4px}
+.trend{font:600 13px var(--mono);margin-top:6px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:13px}
+.kv div{display:flex;justify-content:space-between;gap:6px;border-bottom:1px dashed rgba(255,255,255,.08);padding-bottom:3px}
+.kv span{color:var(--muted)} .kv b{font:600 13px var(--mono)}
+.sens{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:rgba(6,5,26,.45)}
+.sens-h{display:flex;justify-content:space-between;align-items:center;font:700 11px var(--mono);text-transform:uppercase;letter-spacing:1.2px;color:var(--dim);margin-bottom:8px}
+.sens-g{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media (max-width:520px){.sens-g{grid-template-columns:repeat(2,1fr)}}
+.sv{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:6px 8px;min-width:0}
+.sv span{display:block;font-size:11px;color:var(--dim);white-space:nowrap}
+.sv b{font:600 13.5px var(--mono);white-space:nowrap}
+.sv.bad{border-color:rgba(248,113,113,.6)}.sv.bad b{color:#fecaca}
+.sv.warn{border-color:rgba(251,191,36,.5)}.sv.warn b{color:var(--amber)}
+.sv.on{border-color:rgba(244,114,182,.6)}.sv.on b{color:var(--pink)}
+.evt{margin-top:10px;font-size:13px;color:#fed7aa;min-height:20px}
+canvas.chart{width:100%;height:180px;display:block;margin-top:6px}
+canvas.pattern{width:100%;height:66px;display:block}
+.pat-head{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);margin-top:10px}
+.city-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.simtag{font:700 9.5px var(--mono);color:#fde68a;border:1px solid rgba(251,191,36,.45);border-radius:5px;padding:1px 5px;letter-spacing:.6px;vertical-align:middle}
+
+/* AI brain steps */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;position:relative}
+@media (max-width:1150px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+.step{border:1px solid var(--line);border-radius:var(--r);padding:18px;background:var(--glass);transition:.3s;position:relative;overflow:hidden}
+.step:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--grad);opacity:.25;transition:.3s}
+.step .n{font:700 12px var(--mono);color:var(--dim);letter-spacing:1.6px}
+.step h4{margin:4px 0 8px;font:700 22px var(--head)}
+.step p{margin:0 0 12px;font-size:14px;color:#cfd1ee}
+.step .live{font:12px/1.55 var(--mono);color:var(--cyan);border-top:1px dashed rgba(255,255,255,.1);padding-top:10px;white-space:pre-wrap}
+.step.on{border-color:rgba(167,139,250,.7);background:linear-gradient(160deg,rgba(139,92,246,.2),rgba(34,211,238,.08));box-shadow:0 20px 50px -20px rgba(139,92,246,.8);transform:translateY(-4px)}
+.step.on:before{opacity:1}
+.step.on .n{color:var(--v2)}
+
+/* controls */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.sub-h{font:700 11.5px var(--mono);text-transform:uppercase;letter-spacing:1.6px;color:var(--dim);margin:14px 0 8px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px;font-weight:600}
+.toggle small{display:block;color:var(--muted);font-size:13px;font-weight:400}
+.sw{position:relative;width:46px;height:26px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:26px;cursor:pointer;transition:.2s;border:1px solid var(--line2)}
+.sw span:before{content:"";position:absolute;width:20px;height:20px;left:2px;top:2px;background:#c7c9e8;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--grad2);border-color:transparent}
+.sw input:checked+span:before{transform:translateX(20px);background:#fff}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+.sl label{color:#e0e1f8;font-weight:600}
+.sl output{font:700 13px var(--mono);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sl input{grid-column:1/-1;width:100%;accent-color:#8b5cf6}
+.sl .src{grid-column:1/-1;font-size:11.5px;color:var(--dim)}
+.scroll{max-height:560px;overflow:auto;padding-right:6px}
+.note{font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.warnline{font-size:13px;color:var(--amber);min-height:18px}
+.wxline{font:13px var(--mono);color:#bae6fd;min-height:20px;margin:2px 0 8px}
+.log{font:12.5px/1.55 var(--mono);max-height:560px;overflow:auto}
+.log div{padding:7px 0 7px 12px;border-left:2px solid var(--line2);margin-bottom:6px}
+.log time{color:var(--v2);margin-right:8px;font-weight:700}
+.log .pump{border-color:var(--green)}.log .warn{border-color:var(--amber)}.log .crit{border-color:var(--red);color:#fecaca}.log .ok{border-color:var(--cyan)}.log .sched{border-color:var(--purple)}.log .light{border-color:var(--pink)}
+table.imp{width:100%;border-collapse:collapse;font-size:13.5px}
+table.imp th{font:700 10.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:1px;text-align:right;padding:6px 4px;border-bottom:1px solid var(--line)}
+table.imp th:first-child{text-align:left}
+table.imp td{padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.05);text-align:right;font-family:var(--mono);font-size:13px}
+table.imp td:first-child{text-align:left;font-family:var(--sans);color:#dcdef6;font-size:13.5px}
+.better{color:var(--green)}
+.batt{display:flex;align-items:center;gap:12px;margin:16px 0 8px}
+.batt .bar{flex:1;height:16px;border-radius:9px;border:1px solid var(--line2);background:rgba(255,255,255,.04);overflow:hidden}
+.batt .bar div{height:100%;background:var(--grad);transition:width .3s}
+.batt b{font:700 16px var(--mono);min-width:56px;text-align:right}
+.egrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+canvas#timeline{width:100%;height:320px;display:block}
+.eq{font:13.5px/1.9 var(--mono);background:rgba(4,3,18,.7);border:1px solid var(--line);border-radius:14px;padding:14px 18px;overflow-x:auto;white-space:nowrap}
+.eq .c{color:var(--dim)}
+table.par{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+table.par td,table.par th{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top}
+table.par th{text-align:left;font:700 10.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+table.par input{width:92px;background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--text);border-radius:8px;padding:4px 8px;font:13px var(--mono)}
+.src-doc{font:700 10.5px var(--mono);color:var(--green);border:1px solid rgba(52,211,153,.45);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.src-asm{font:700 10.5px var(--mono);color:var(--amber);border:1px solid rgba(251,191,36,.45);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.src-ai{font:700 10.5px var(--mono);color:var(--purple);border:1px solid rgba(167,139,250,.5);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.checks div{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px}
+.checks .p{color:var(--green);font:700 13px var(--mono)}.checks .f{color:var(--red);font:700 13px var(--mono)}
+.checks small{display:block;color:var(--muted);font-family:var(--mono);font-size:11.5px}
+ul.lim{margin:8px 0 0;padding-left:20px;font-size:14px;color:#dcdef6}
+ul.lim li{margin:5px 0}
+
+/* hardware */
+.hw{display:grid;grid-template-columns:1.1fr 1fr;gap:24px}
+@media (max-width:950px){.hw{grid-template-columns:1fr}}
+.hw-top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.drivers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:520px){.drivers{grid-template-columns:1fr}}
+.drv{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:rgba(6,5,26,.5);transition:.2s}
+.drv.on{border-color:var(--green);box-shadow:0 0 30px -8px rgba(52,211,153,.6)}
+.drv h5{margin:0 0 8px;font:700 15px var(--head);display:flex;justify-content:space-between;gap:6px}
+.drv h5 small{color:var(--muted);font:600 12px var(--mono)}
+.pin{display:grid;grid-template-columns:62px 1fr auto;gap:8px;align-items:center;font:12.5px var(--mono);padding:4px 0;border-bottom:1px dashed rgba(255,255,255,.07)}
+.pin span{color:var(--dim)}
+.pin .bar{height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden}
+.pin .bar div{height:100%;background:var(--grad);width:0}
+.pin b.hi{color:var(--green)} .pin b.lo{color:#5e6188}
+.led{display:inline-block;width:11px;height:11px;border-radius:50%;background:#1d2b28;vertical-align:middle}
+.led.on{background:#34d399;box-shadow:0 0 12px #34d399}
+.console{font:12.5px/1.55 var(--mono);background:#03020f;border:1px solid var(--line);border-radius:14px;padding:10px 12px;height:190px;overflow:auto;color:#a9abd0}
+.console .tx{color:var(--cyan)} .console .rx{color:#e0e1f8} .console .er{color:#fca5a5} .console .ok{color:var(--green)}
+.hw-alert{display:none;margin:10px 0;padding:10px 12px;border-radius:12px;border:1px solid var(--red);background:rgba(248,113,113,.1);color:#fecaca;font-size:13.5px}
+ol.wire{margin:6px 0 0;padding:0;list-style:none;counter-reset:w}
+ol.wire li{counter-increment:w;position:relative;padding:12px 14px 12px 54px;margin:10px 0;border:1px solid var(--line);border-radius:14px;background:var(--glass);font-size:14.5px;color:#dcdef6}
+ol.wire li:before{content:counter(w);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:700 14px var(--head);background:var(--grad2);color:#fff}
+ol.wire b{color:#fff}
+table.pins{width:100%;border-collapse:collapse;font:12.5px var(--mono);margin-top:14px}
+table.pins th,table.pins td{padding:6px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+table.pins th{font:700 10.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+
+/* guided tour */
+.tour{position:fixed;right:22px;bottom:22px;z-index:60;width:min(380px,calc(100vw - 32px));border-radius:20px;padding:18px;background:rgba(14,12,44,.95);border:1px solid rgba(167,139,250,.5);box-shadow:0 30px 80px -20px rgba(0,0,0,.9),0 0 40px -10px rgba(139,92,246,.6);backdrop-filter:blur(14px);display:none}
+.tour.on{display:block;animation:rise .35s ease}
+@keyframes rise{from{transform:translateY(16px);opacity:0}}
+.tour .tn{font:700 12px var(--mono);letter-spacing:1.6px;color:var(--v2)}
+.tour h4{margin:4px 0 6px;font:700 21px var(--head)}
+.tour p{margin:0 0 14px;font-size:14.5px;color:#d4d6f5}
+.tour .bar{height:4px;border-radius:3px;background:rgba(255,255,255,.08);margin-bottom:14px;overflow:hidden}
+.tour .bar div{height:100%;background:var(--grad);transition:width .3s}
+.tour .acts{display:flex;gap:8px;flex-wrap:wrap}
+.tour .x{position:absolute;right:12px;top:10px;border:0;background:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+footer{border-top:1px solid var(--line);margin-top:80px;padding:34px 0 50px;color:var(--dim);font-size:13.5px}
+footer .container{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-in">
+    <a class="logo" href="#top"><span class="logo-mark"><svg width="22" height="22" viewBox="0 0 26 26" fill="none"><circle cx="7" cy="13" r="4.5" stroke="#fff" stroke-width="2.2"/><circle cx="19" cy="13" r="4.5" stroke="#fff" stroke-width="2.2"/><path d="M11.5 11h3M14.5 15h-3" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span><span>MIRAGE</span></a>
+    <div class="links" id="navLinks">
+      <a href="#top">Overview</a>
+      <a href="#sim">Live Simulation</a>
+      <a href="#brain">AI Brain</a>
+      <a href="#scenarios">Scenarios</a>
+      <a href="#data">Data</a>
+      <a href="#model">Model</a>
+      <a href="#hardware">Hardware</a>
+    </div>
+    <div class="nav-r">
+      <span class="pill" id="modePillTop">DEMO · VIRTUAL PUMPS</span>
+      <button class="btn primary small" id="navConnect">🔌 Connect Arduino</button>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+<div class="container">
+  <section class="hero">
+    <div>
+      <span class="eyebrow"><i></i>STEM project · AI-controlled algae network</span>
+      <h1>Cities that <span class="grad">share clean air.</span></h1>
+      <p class="lead"><b>MIRAGE</b> links two cities' algae tanks with pipes and pumps. When one city's CO₂ rises, an AI finds the city with spare algae, works out a safe amount and sends it across. Live simulation, real Arduino pumps.</p>
+      <div class="ctas">
+        <button class="btn primary big" id="heroStart">▶ Launch simulation</button>
+        <button class="btn big" id="heroTour">✦ Guided demo</button>
+        <button class="btn ghost big" id="heroHw">🔌 Connect Arduino</button>
+      </div>
+      <div class="trust"><span>Predictive AI</span><span>Donor protection</span><span>Two-way algae flow</span><span>Arduino + L298N pumps</span></div>
+    </div>
+    <div class="console-card">
+      <div class="cc-top"><div class="cc-dots"><i></i><i></i><i></i></div><span class="cc-title">mirage://network/live</span><span class="live-dot" id="heroLive"><i></i>PAUSED</span></div>
+      <div class="stats">
+        <div class="stat"><div class="k">Sim clock</div><div class="v" id="hClock">05:00</div><div class="s" id="hDay">Day 1</div></div>
+        <div class="stat"><div class="k">AI status</div><div class="v" id="hMode" style="font-size:20px;padding:5px 0">MONITORING</div><div class="s" id="hTicks">0 decisions</div></div>
+        <div class="stat"><div class="k" style="color:var(--cityA)">City A · CO₂</div><div class="v" id="hA">—</div><div class="s" id="hAs">ppm</div></div>
+        <div class="stat"><div class="k" style="color:var(--cityB)">City B · CO₂</div><div class="v" id="hB">—</div><div class="s" id="hBs">ppm</div></div>
+        <div class="stat wide"><div class="k">Algae moved through the network</div><div class="v"><span class="grad" id="hL">0.0 L</span></div><div class="s" id="hRuns">0 pump runs</div></div>
+      </div>
+      <div class="ticker" id="hTicker">› waiting for start…</div>
+    </div>
+  </section>
+
+  <div class="flow">
+    <div class="flow-c"><div class="ix">🏭</div><h4>1 · A city gets polluted</h4><p>Rush hour or an event pushes CO₂ up. Each city's own algae tank works, but may not keep up.</p></div>
+    <div class="flow-c"><div class="ix">🧠</div><h4>2 · The AI predicts</h4><p>It learns each city's daily pattern, forecasts 3 hours ahead and spots the problem early.</p></div>
+    <div class="flow-c"><div class="ix">⇄</div><h4>3 · Algae flow across</h4><p>The donor city with spare algae pumps a safe amount to the receiver. Its reserve is never touched.</p></div>
+    <div class="flow-c"><div class="ix">🌿</div><h4>4 · CO₂ falls gradually</h4><p>More algae means more uptake. CO₂ drops step by step, never instantly, then the pumps stop.</p></div>
+  </div>
+
+  <!-- ===================== LIVE SIMULATION ===================== -->
+  <section class="sec" id="sim">
+    <div class="sec-head">
+      <span class="eyebrow"><i></i>01 · Live simulation</span>
+      <h2 class="sec-title">Watch two cities <span class="grad">help each other</span></h2>
+      <p class="sec-sub">Every animation and every number below comes straight from the running model. Pollute a city and watch the AI react.</p>
+    </div>
+    <div class="simbar">
+      <button class="btn primary pulse" id="btnPlay">▶ Start</button>
+      <button class="btn" id="btnReset">↺ Reset</button>
+      <div class="seg" id="speedSeg"></div>
+      <div class="clock"><span class="lbl">Simulated time</span><span class="v" id="clock">Day 1 · 05:00</span></div>
+      <span class="sp"></span>
+      <button class="btn warn small" data-pollute="A">☁ Pollute A</button>
+      <button class="btn warn small" data-pollute="B">☁ Pollute B</button>
+      <span class="pill v" title="Every number on this page is produced by the simulation model, not lab or field measurements.">SIMULATED VALUES</span>
+    </div>
+
+    <section class="card scene">
+      <canvas id="scene" width="1200" height="480" aria-label="Animated view of two cities, their algae tanks and the pump network"></canvas>
+      <div class="scene-alert" id="sceneAlert"></div>
+      <div class="legend">
+        <span><i style="background:#9b917a"></i>Smog follows simulated CO₂</span>
+        <span><i style="background:#34d399"></i>Algae level</span>
+        <span style="color:#22d3ee"><i class="d"></i>"Algae needed" line</span>
+        <span style="color:#fbbf24"><i></i>Donor reserve</span>
+        <span style="color:#34d399"><i style="height:6px"></i>Active route: donor → receiver</span>
+        <span style="color:#a78bfa"><i class="d"></i>Scheduled pre-pump</span>
+        <span style="color:#f472b6"><i style="background:#f472b6"></i>Grow lights</span>
+      </div>
+    </section>
+
+    <div class="grid g-main">
+      <section class="card cmd">
+        <h3 class="ct"><span class="ic">⌘</span>AI command center <span class="tag simtag">SIM</span></h3>
+        <div class="cmd-top"><span class="badge m-MONITORING" id="badge"><span class="led"></span><span id="badgeTxt">BALANCED · MONITORING</span></span><span class="next" id="nextCheck"></span></div>
+        <div class="headline" id="headline">Press Start to run the simulation</div>
+        <div class="tiles">
+          <div class="tile"><div class="lbl">When</div><div class="v" id="tWhen">—</div><div class="s" id="tWhenS">&nbsp;</div></div>
+          <div class="tile"><div class="lbl">Route</div><div class="v" id="tRoute">—</div><div class="s" id="tRouteS">&nbsp;</div></div>
+          <div class="tile"><div class="lbl">How much</div><div class="v" id="tL">—</div><div class="s" id="tLS">&nbsp;</div></div>
+          <div class="tile"><div class="lbl">Pump time</div><div class="v" id="tSecs">—</div><div class="s" id="tSecsS">&nbsp;</div></div>
+          <div class="tile"><div class="lbl">Power</div><div class="v" id="tPow">—</div><div class="s" id="tPowS">&nbsp;</div></div>
+        </div>
+        <div class="prog"><div id="prog"></div></div>
+        <div class="why" id="why">The AI reads both cities every 1.5 s (9 simulated minutes).</div>
+        <details class="nums" open><summary>Show the numbers behind this decision</summary><div class="numbers" id="numbers">—</div></details>
+        <div class="prio-wrap"><table class="prio">
+          <thead><tr><th>City</th><th>CO₂ (AI view)</th><th>Forecast peak</th><th>Algae have</th><th>Algae need</th><th>Gap</th><th>Spare</th><th>Urgency</th><th>Priority</th></tr></thead>
+          <tbody id="prioBody"></tbody>
+        </table></div>
+        <div class="ainote"><span>ⓘ</span><span><b>What kind of AI is this?</b> A rule-based predictive controller. It learns each city's daily CO₂ pattern with running averages, forecasts by running the city model forward, and decides with the guide's fixed rules. It is <b>not</b> a trained machine-learning model.</span></div>
+      </section>
+      <section class="card city" id="cardA"></section>
+      <section class="card city" id="cardB"></section>
+    </div>
+  </section>
+
+  <!-- ===================== AI BRAIN ===================== -->
+  <section class="sec" id="brain">
+    <div class="sec-head">
+      <span class="eyebrow"><i></i>02 · AI brain</span>
+      <h2 class="sec-title">How the AI <span class="grad">decides</span></h2>
+      <p class="sec-sub">Five steps run every 1.5 seconds. The highlighted card is what the AI is doing right now, with its live numbers underneath.</p>
+    </div>
+    <div class="steps">
+      <div class="step" id="st1"><div class="n">STEP 01</div><h4>Sense</h4><p>Reads algae level, temperature, pH, turbidity, light and (simulated) CO₂ for each city. Stuck or dead CO₂ sensors are detected and replaced by a model estimate.</p><div class="live" id="lv1"></div></div>
+      <div class="step" id="st2"><div class="n">STEP 02</div><h4>Learn</h4><p>Estimates each city's CO₂ production rate and keeps a 24-hour rush-hour profile (the bars on each city card).</p><div class="live" id="lv2"></div></div>
+      <div class="step" id="st3"><div class="n">STEP 03</div><h4>Predict</h4><p>Runs the city model forward (dashed amber line on the charts) to find when CO₂ will cross the trigger level and how much algae will be needed.</p><div class="live" id="lv3"></div></div>
+      <div class="step" id="st4"><div class="n">STEP 04</div><h4>Decide</h4><p>Receivers are ranked by urgency × population. Donors may never drop below the reserve level or below what they need themselves.</p><div class="live" id="lv4"></div></div>
+      <div class="step" id="st5"><div class="n">STEP 05</div><h4>Act</h4><p>Pump power scales with urgency; pump time = litres × s/L ÷ power. Pre-pumping starts early enough for the algae to take effect. Pumping stops when the deficit closes.</p><div class="live" id="lv5"></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== SCENARIOS ===================== -->
+  <section class="sec" id="scenarios">
+    <div class="sec-head">
+      <span class="eyebrow"><i></i>03 · Scenarios &amp; events</span>
+      <h2 class="sec-title">Stress-test the <span class="grad">network</span></h2>
+      <p class="sec-sub">Trigger pollution, change the weather, break a sensor or tune the AI's rules. The decision log records every choice the AI makes.</p>
+    </div>
+    <div class="grid g-3" style="margin-top:0">
+      <section class="card">
+        <h3 class="ct"><span class="ic">⚡</span>Scenario and events</h3>
+        <div class="sub-h">Pollution</div>
+        <div class="row">
+          <button class="btn warn" data-pollute="A">☁ Pollute City A</button>
+          <button class="btn warn" data-pollute="B">☁ Pollute City B</button>
+          <button class="btn warn" data-pollute="AB">☁ Pollute both</button>
+        </div>
+        <div class="sub-h">Weather</div>
+        <div class="row">
+          <button class="btn wx" id="btnCloud">🌥 Cloudy day</button>
+          <button class="btn wx" id="btnHeat">🌡 Heat wave</button>
+          <button class="btn" id="btnClear">✕ Clear all</button>
+        </div>
+        <div class="wxline" id="wxLine"></div>
+        <div class="toggle"><div>Random events<small>Pollution spikes, cloudy spells and heat waves at random times (average every <span id="rndInfo"></span>).</small></div><label class="sw"><input type="checkbox" id="optRand"><span></span></label></div>
+        <div class="toggle"><div>Predictive pumping<small>On: acts on the 3 h forecast. Off: reacts only when CO₂ is already above the trigger.</small></div><label class="sw"><input type="checkbox" id="optPred" checked><span></span></label></div>
+        <div class="toggle"><div>Smart grow lights<small>On only when CO₂ is high and it is dark or cloudy, never when the battery is low.</small></div><label class="sw"><input type="checkbox" id="optLights" checked><span></span></label></div>
+        <div class="toggle"><div>Pre-trained pattern<small>On: the AI watched 3 simulated days first. Off: it learns hour by hour. Applies on Reset.</small></div><label class="sw"><input type="checkbox" id="optPre" checked><span></span></label></div>
+        <div class="toggle"><div>"No network" comparison<small>Grey dashed line: the same city without any algae transfers.</small></div><label class="sw"><input type="checkbox" id="optGhost" checked><span></span></label></div>
+        <p class="note"><b>Sensor faults:</b> use <i>Sensor fault</i> on each city card (off → stuck → dead → off). Space = start/pause.</p>
+      </section>
+      <section class="card">
+        <h3 class="ct"><span class="ic">⚙</span>AI settings <span class="tag src-doc">FROM GUIDE §8</span></h3>
+        <div class="warnline" id="setWarn"></div>
+        <div class="scroll" id="docSettings"></div>
+      </section>
+      <section class="card">
+        <h3 class="ct"><span class="ic">≡</span>AI decision log</h3>
+        <div class="log" id="log"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== DATA ===================== -->
+  <section class="sec" id="data">
+    <div class="sec-head">
+      <span class="eyebrow"><i></i>04 · Data &amp; impact</span>
+      <h2 class="sec-title">Proof in the <span class="grad">numbers</span></h2>
+      <p class="sec-sub">Each city is compared with a hidden twin that gets the same pollution and weather but never shares algae.</p>
+    </div>
+    <div class="grid g-tl" style="margin-top:0">
+      <section class="card">
+        <h3 class="ct"><span class="ic">📈</span>Network timeline · last 24 simulated hours <span class="tag simtag">SIM</span></h3>
+        <canvas id="timeline"></canvas>
+        <div class="legend" style="border:0;padding:8px 0 0">
+          <span style="color:var(--cityA)"><i style="background:var(--cityA)"></i>City A</span>
+          <span style="color:var(--cityB)"><i style="background:var(--cityB)"></i>City B</span>
+          <span style="color:#8b8fb8"><i class="d"></i>Same city with no network</span>
+          <span style="color:#34d399"><i style="background:rgba(52,211,153,.35);height:8px"></i>Pump running</span>
+        </div>
+      </section>
+      <section class="card">
+        <h3 class="ct"><span class="ic">⚡</span>Impact and energy <span class="tag simtag">SIM</span></h3>
+        <table class="imp"><thead><tr><th></th><th>City A</th><th>City B</th></tr></thead><tbody id="impBody"></tbody></table>
+        <div class="batt"><span class="note" style="margin:0;font-weight:600">Battery</span><div class="bar"><div id="battBar"></div></div><b id="battPct">—</b></div>
+        <div class="egrid">
+          <div class="sv"><span>Solar now</span><b id="eSolar">—</b></div>
+          <div class="sv"><span>Load now</span><b id="eLoad">—</b></div>
+          <div class="sv"><span>Net</span><b id="eNet">—</b></div>
+        </div>
+        <table class="imp" style="margin-top:12px"><tbody id="netBody"></tbody></table>
+        <p class="note">Energy figures use demo-scale solar and battery assumptions (see Model).</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== MODEL ===================== -->
+  <section class="sec" id="model">
+    <div class="sec-head">
+      <span class="eyebrow"><i></i>05 · Science &amp; model</span>
+      <h2 class="sec-title">The model behind <span class="grad">every number</span></h2>
+      <p class="sec-sub">What comes from the project guide, what is an assumption, and checks that prove the simulation behaves correctly.</p>
+    </div>
+    <div class="grid g-2" style="margin-top:0">
+      <section class="card">
+        <h3 class="ct"><span class="ic">∑</span>Equations</h3>
+        <div class="eq">
+          dC/dt = E(t) − k<sub>v</sub>·(C − C<sub>bg</sub>) − a·m·S·(C − C<sub>bg</sub>)   <span class="c">// city CO₂, ppm per sim-minute</span><br>
+          m = health × light factor   <span class="c">// health = f(temp)·f(pH)·f(turbidity)</span><br>
+          dS/dt = r·S·(1 − S/S<sub>max</sub>) ± pump flow   <span class="c">// algae stock, litres per sim-minute</span><br>
+          S<sub>need</sub> = (E ÷ (target − C<sub>bg</sub>) − k<sub>v</sub>) ÷ (a·m)   <span class="c">// algae that hold the target</span><br>
+          pump time = litres × s/L ÷ power,  power = 55% + 45% × urgency,  PWM = power × max PWM
+        </div>
+        <p class="note">C = CO₂ (ppm), E = the city's CO₂ production (ppm/min), S = algae stock (L), m = how effectively the algae work right now (0–1). Transferred algae change <b>S</b> only. CO₂ then changes step by step, so it never drops instantly. 1 simulated day = 4 real minutes at 1× (guide §5).</p>
+        <h3 class="ct" style="margin-top:22px"><span class="ic">⚠</span>Parameters the guide does not give <span class="tag src-asm">ASSUMPTIONS</span></h3>
+        <p class="note">Illustrative calibration choices, <b>not measurements</b>. Edit them to test sensitivity. Starred items apply on Reset.</p>
+        <table class="par" id="asmTable"></table>
+      </section>
+      <section class="card">
+        <h3 class="ct"><span class="ic">✓</span>Model checks <span class="tag"><button class="btn small primary" id="btnChecks">Run checks</button></span></h3>
+        <div class="checks" id="checks"><p class="note">Runs the model on hidden copies of the cities and tests the equations, safety rules, both transfer directions, sensor-fault handling, the energy balance, and that CO₂ changes gradually after a transfer.</p></div>
+        <h3 class="ct" style="margin-top:22px"><span class="ic">ⓘ</span>Honest limits</h3>
+        <ul class="lim">
+          <li>CO₂, algae, sensor readings, energy and all impacts are <b>simulated</b> model-scale values, not experimental results.</li>
+          <li>Only the AI settings come from the guide. Absorption, growth, air exchange, tank size, emission patterns, algae-health ranges, light response, population, solar and battery sizes are assumptions.</li>
+          <li><b>Not modelled:</b> O₂ production (the guide gives no yield), nutrient limits, and pH or turbidity changes caused by CO₂ uptake.</li>
+          <li>Uptake is assumed proportional to algae stock × excess CO₂ × health × light factor; growth is a simple logistic curve.</li>
+          <li>While a CO₂ sensor is faulty, the AI estimates CO₂ from its learned pattern, so it cannot see a new pollution spike in that city.</li>
+          <li>The AI is rule-based with statistical pattern learning (moving averages). It does not use machine learning.</li>
+          <li>Pump seconds use the guide's calibration (0.35 s per simulated litre): demo-scale times, not real pipe flow.</li>
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================== HARDWARE ===================== -->
+  <section class="sec" id="hardware">
+    <div class="sec-head">
+      <span class="eyebrow"><i></i>06 · Hardware link</span>
+      <h2 class="sec-title">Connect the <span class="grad">real pumps</span></h2>
+      <p class="sec-sub">An Arduino Uno with two L298N drivers runs the real pumps exactly when, and for as long as, the AI decides. Without it, Demo mode drives the same virtual pins.</p>
+    </div>
+    <section class="card" id="hwCard">
+      <h3 class="ct"><span class="ic">🔌</span>Arduino control <span class="tag pill" id="modePill">DEMO · VIRTUAL PUMPS</span></h3>
+      <div class="hw">
+        <div>
+          <div class="hw-top">
+            <button class="btn primary" id="btnConnect">🔌 Connect Arduino</button>
+            <button class="btn test" id="btnT1">Test pump 1 · 3 s</button>
+            <button class="btn test" id="btnT2">Test pump 2 · 3 s</button>
+            <button class="btn danger" id="btnStop">■ Stop pumps</button>
+          </div>
+          <div class="toggle"><div>Demo mode<small>On: virtual pumps only. Untick to connect the Arduino.</small></div><label class="sw"><input type="checkbox" id="optDemo" checked><span></span></label></div>
+          <div class="toggle"><div>Auto-connect Arduino<small>Reconnects by itself when the page opens or the Arduino is plugged in. You choose the port once; after that no clicks are needed.</small></div><label class="sw"><input type="checkbox" id="optAuto" checked><span></span></label></div>
+          <div class="hw-alert" id="hwAlert"></div>
+          <div id="hwPwm"></div>
+          <div class="drivers">
+            <div class="drv" id="drv1"><h5>L298N #1 · Pump 1 <small>B → A</small></h5>
+              <div class="pin"><span>ENA D5</span><div class="bar"><div id="p1ena"></div></div><b id="p1enaV">0</b></div>
+              <div class="pin"><span>IN1 D7</span><div></div><b id="p1in1" class="lo">LOW</b></div>
+              <div class="pin"><span>IN2 D8</span><div></div><b id="p1in2" class="lo">LOW</b></div>
+              <div class="pin"><span>LED D2</span><div></div><span class="led" id="p1led"></span></div>
+            </div>
+            <div class="drv" id="drv2"><h5>L298N #2 · Pump 2 <small>A → B</small></h5>
+              <div class="pin"><span>ENA D6</span><div class="bar"><div id="p2ena"></div></div><b id="p2enaV">0</b></div>
+              <div class="pin"><span>IN1 D9</span><div></div><b id="p2in1" class="lo">LOW</b></div>
+              <div class="pin"><span>IN2 D10</span><div></div><b id="p2in2" class="lo">LOW</b></div>
+              <div class="pin"><span>LED D4</span><div></div><span class="led" id="p2led"></span></div>
+            </div>
+          </div>
+          <div class="sub-h">Serial console · 115200 baud</div>
+          <div class="console" id="console"></div>
+        </div>
+        <div>
+          <div class="sub-h" style="margin-top:0">Wiring notes</div>
+          <ol class="wire">
+            <li>Upload <b>algaegrid.ino</b> to the Arduino. Close the Serial Monitor afterwards (it blocks the port).</li>
+            <li>Open this page in <b>Chrome or Edge</b>. Untick <b>Demo mode</b> or press <b>Connect Arduino</b>, then choose the Arduino's COM port. With <b>Auto-connect</b> on, you only choose it once.</li>
+            <li><b>Pump 1 moves algae B → A. Pump 2 moves A → B.</b> Use <i>Test pump</i> first, then tune <i>Pump time per litre</i> so the demo looks right.</li>
+            <li>Both <b>L298N grounds and the Arduino GND must be joined</b> (with the supply minus). Remove the <b>ENA jumper</b> on each L298N so PWM works.</li>
+            <li>The L298N drops about <b>2 V</b>: use a supply about 2 V above the pumps' rating, or lower <i>Max PWM</i>.</li>
+          </ol>
+          <p class="note">Without the Arduino, Demo mode drives the same virtual pins shown on the left. At speeds other than 1×, the real pump time is scaled to match the on-screen pump.</p>
+          <table class="pins">
+            <thead><tr><th>Connection</th><th>L298N #1 (Pump 1, B → A)</th><th>L298N #2 (Pump 2, A → B)</th></tr></thead>
+            <tbody>
+              <tr><td>ENA (speed, PWM)</td><td>D5</td><td>D6</td></tr>
+              <tr><td>IN1 / IN2</td><td>D7 / D8</td><td>D9 / D10</td></tr>
+              <tr><td>OUT1 / OUT2</td><td>Pump 1</td><td>Pump 2</td></tr>
+              <tr><td>12V terminal</td><td>Pump supply +</td><td>Pump supply +</td></tr>
+              <tr><td>GND</td><td>Supply − and Arduino GND</td><td>Supply − and Arduino GND</td></tr>
+              <tr><td>Green LED (220 Ω)</td><td>D2</td><td>D4</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Commands: <code>RUN &lt;pump&gt; &lt;pwm&gt; &lt;ms&gt;</code>, <code>STOP</code>, <code>PING</code>. The Arduino answers <code>ACK RUN</code> and later <code>DONE</code>; no answer within 1.5 s raises an alert.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+</div>
+</main>
+
+<div class="tour" id="tour">
+  <button class="x" id="tourX" aria-label="Close guided demo">×</button>
+  <div class="tn" id="tourN">GUIDED DEMO · 1/6</div>
+  <h4 id="tourH"></h4>
+  <p id="tourP"></p>
+  <div class="bar"><div id="tourBar"></div></div>
+  <div class="acts"><button class="btn small" id="tourBack">← Back</button><button class="btn small primary" id="tourDo">Do it</button><button class="btn small" id="tourNext">Next →</button></div>
+</div>
+
+<footer><div class="container"><span><b style="color:var(--text)">MIRAGE</b> · Algae Exchange Network · Cities That Help Each Other</span><span>STEM simulation. All values are produced by the model on this page.</span></div></footer>
+
+<script>
+/*CORE-START*/
+'use strict';
+// ===================== SIMULATION CORE (no DOM) =====================
+const SIM_PER_REAL_S = 6;   // guide §5: 1 simulated day ≈ 4 real minutes at 1x → 6 sim-min per real s
+const DT = 0.5;             // integration step (sim-min)
+const HIST_EVERY = 2;       // history sample (sim-min)
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const hourOf=t=>(((t/60)%24)+24)%24;
+const f=(x,d=1)=>(x==null||!isFinite(x))?'—':Number(x).toFixed(d);
+const pct=x=>Math.round(x*100)+'%';
+function hhmm(t){const m=((Math.round(t)%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function dayClock(t){return 'Day '+(Math.floor(Math.round(t)/1440)+1)+' · '+hhmm(t);}
+
+function defaultParams(){return{
+  // ---- documented in the guide (§7, §8) ----
+  target:600, danger:850, trigger:675, reservePct:25, gain:0.85, minTransfer:4,
+  leadMin:60, horizonH:3, pollution:10, eventRealS:15, secPerL:0.35, maxPulseS:12,
+  settleS:3, aiCheckS:1.5, powerMin:0.55, powerMax:1.0, maxPWM:255,
+  predictive:true, pretrained:true, smartLights:true, randomEvents:false,
+  // ---- model assumptions (NOT in the guide; illustrative, editable) ----
+  bg:420, kv:0.008, absorb:0.0003, growth:0.0006, cap:100, initA:45, initB:80,
+  profiles:{
+    A:{base:2.8, m:3.6, mh:8.0, e:2.2, eh:18.0, w:1.2},
+    B:{base:2.0, m:1.2, mh:8.5, e:1.5, eh:18.5, w:1.2}
+  },
+  popA:120, popB:80,                          // population, thousands
+  lightFloor:0.6, lightSat:40, growLightPct:60, // uptake at zero light = 60%; full uptake above 40% light
+  tMin:10, tOptLo:20, tOptHi:30, tMax:40,     // tank temperature health range, °C
+  phMin:5.5, phOptLo:7, phOptHi:9, phMax:10.5,
+  turbOK:100, turbBad:200,                    // NTU
+  heatWaveC:7, cloudFactor:0.3, weatherH:6,
+  solarPeakW:60, batteryWh:300, batteryStartPct:70, pumpW:18, growLightW:20, lowBatteryPct:20,
+  randPollutionH:6, randCloudH:16, randHeatH:30,
+  // ---- AI design choices (controller tuning, not science) ----
+  anomalyTau:60, learnRate:0.3
+};}
+function cloneParams(p){return JSON.parse(JSON.stringify(p));}
+
+// --- physics ---
+function emissionTrue(prof,t){
+  const h=hourOf(t);
+  const g=c=>{let d=Math.abs(h-c);d=Math.min(d,24-d);return Math.exp(-0.5*(d/prof.w)**2);};
+  return prof.base+prof.m*g(prof.mh)+prof.e*g(prof.eh);
+}
+function cityEmission(w,c,t){
+  let E=emissionTrue(w.p.profiles[c.id],t);
+  if(t<c.eventEnd)E+=w.p.pollution;
+  if(c.holding)E+=w.p.pollution;
+  return E;
+}
+function dCdt(C,S,E,p,m=1){const ex=C-p.bg;return E-p.kv*ex-p.absorb*m*S*Math.max(0,ex);}
+function dSdt(S,p){return p.growth*S*(1-S/p.cap);}
+function steadyC(E,S,p,m=1){return p.bg+E/(p.kv+p.absorb*m*S);}
+function algaeNeeded(E,p,m=1){return (E/(p.target-p.bg)-p.kv)/(p.absorb*Math.max(0.02,m));}
+function pumpSeconds(L,power,p){return L*p.secPerL/power;}
+function pulseCapL(power,p){return p.maxPulseS*power/p.secPerL;}
+function urgencyOf(peakC,p){return clamp((peakC-p.target)/(p.danger-p.target),0,1);}
+function powerFor(u,p){return p.powerMin+(p.powerMax-p.powerMin)*u;}
+function trap(x,a,b,c,d){if(x<=a||x>=d)return 0;if(x<b)return(x-a)/(b-a);if(x>c)return(d-x)/(d-c);return 1;}
+function sunFrac(t){return Math.max(0,Math.sin((hourOf(t)-6)/12*Math.PI));}
+const cloudy=w=>w.t<w.env.cloudEnd, hot=w=>w.t<w.env.heatEnd;
+function lightFactor(light,p){return p.lightFloor+(1-p.lightFloor)*Math.min(1,light/p.lightSat);}
+function sunLightPct(w,t){return 100*sunFrac(t)*(cloudy(w)?w.p.cloudFactor:1);}
+function updateSensors(w,c){
+  const p=w.p,sunL=sunLightPct(w,w.t);
+  const light=Math.min(100,sunL+(c.lightOn?p.growLightPct:0));
+  const T=24+(c.id==='A'?1:0)+3*Math.sin(2*Math.PI*(hourOf(w.t)-9)/24)+(hot(w)?p.heatWaveC:0);
+  const ph=7.5+0.6*light/100;
+  const turb=15+70*c.S/p.cap;
+  const fT=trap(T,p.tMin,p.tOptLo,p.tOptHi,p.tMax),fpH=trap(ph,p.phMin,p.phOptLo,p.phOptHi,p.phMax);
+  const fTu=turb<=p.turbOK?1:clamp(1-0.5*(turb-p.turbOK)/(p.turbBad-p.turbOK),0.5,1);
+  const health=fT*fpH*fTu,lf=lightFactor(light,p);
+  c.sens={light,sunL,T,ph,turb,fT,fpH,fTu,health,lf,m:Math.max(0.02,health*lf)};
+}
+function mAt(w,c,tt){
+  const p=w.p,light=Math.min(100,100*sunFrac(tt)*(cloudy(w)?p.cloudFactor:1)+(c.lightOn?p.growLightPct:0));
+  return Math.max(0.02,c.sens.health*lightFactor(light,p));
+}
+function readCO2(c){return c.fault==='dead'?null:c.fault==='stuck'?c.stuckVal:c.C;}
+
+function makeCity(id,S0,p,t){
+  const E0=emissionTrue(p.profiles[id],t);
+  const c={id,C:0,S:S0,Cg:0,Sg:S0,Etrue:E0,absorbRate:0,holding:false,eventEnd:-1e9,lightOn:false,
+    fault:'ok',stuckVal:null,aiStatus:null,obsC:null,lastReading:null,prevOk:false,
+    Ehat:null,lastT:null,lastS:null,lastM:null,profile:new Array(24).fill(null),bin:null,fc:null,
+    received:0,donated:0,absorbed:0,absorbedG:0,peak:0,peakG:0,dangerMin:0,dangerMinG:0,lightMin:0};
+  return c;
+}
+function createWorld(pIn,opts={}){
+  const p=cloneParams(pIn),t0=opts.t0??5*60;
+  const w={p,t:t0,t0,cities:[makeCity('A',p.initA,p,t0),makeCity('B',p.initB,p,t0)],pump:null,
+    env:{cloudEnd:-1e9,heatEnd:-1e9},seed:opts.seed??12345,
+    ai:{mode:'MONITORING',hold:false,nextTick:t0,lastTick:null,settleUntil:-1e9,scheduled:null,decision:null,ticks:0,step:1},
+    energy:{batt:p.batteryWh*p.batteryStartPct/100,solarW:0,loadW:0,solarWh:0,pumpWh:0,lightWh:0,lowLogged:false},
+    log:[],hist:[],lastHist:-1e9,transfers:[],observeOnly:!!opts.observeOnly,noHist:!!opts.noHist,
+    stats:{litres:0,runs:0,pumpSecs:0},flags:{critical:0,armed:0,sensorFaults:0,lightViolations:0}};
+  for(const c of w.cities){updateSensors(w,c);c.C=c.Cg=steadyC(c.Etrue,c.S,p,c.sens.m);c.peak=c.peakG=c.C;}
+  return w;
+}
+const cityById=(w,id)=>w.cities[id==='A'?0:1];
+const other=(w,c)=>w.cities[c.id==='A'?1:0];
+const popOf=(w,c)=>c.id==='A'?w.p.popA:w.p.popB;
+function rnd(w){w.seed=(w.seed*1664525+1013904223)>>>0;return w.seed/4294967296;}
+function addLog(w,type,msg){w.log.unshift({t:w.t,type,msg});if(w.log.length>160)w.log.pop();}
+
+function pretrain(w){
+  const warm=createWorld(w.p,{observeOnly:true,noHist:true,t0:w.t0-3*1440});
+  while(warm.t<w.t0-1e-9)stepWorld(warm,DT);
+  w.cities.forEach((c,i)=>{c.profile=warm.cities[i].profile.slice();});
+  addLog(w,'ok','AI pattern pre-trained by watching 3 simulated days (no transfers during training).');
+}
+
+function stepWorld(w,dt){
+  const p=w.p;
+  if(p.randomEvents&&!w.observeOnly)randomEvents(w,dt);
+  for(const c of w.cities){
+    updateSensors(w,c);
+    const m=c.sens.m,E=cityEmission(w,c,w.t);c.Etrue=E;
+    const ex=Math.max(0,c.C-p.bg),exg=Math.max(0,c.Cg-p.bg);
+    c.absorbRate=p.absorb*m*c.S*ex;
+    c.absorbed+=c.absorbRate*dt;c.absorbedG+=p.absorb*m*c.Sg*exg*dt;
+    const dC=dCdt(c.C,c.S,E,p,m),dS=dSdt(c.S,p),dCg=dCdt(c.Cg,c.Sg,E,p,m),dSg=dSdt(c.Sg,p);
+    c.C+=dC*dt;c.S+=dS*dt;c.Cg+=dCg*dt;c.Sg+=dSg*dt;
+    if(c.lightOn)c.lightMin+=dt;
+  }
+  energyStep(w,dt);
+  if(w.pump)pumpStep(w,dt);
+  w.t+=dt;
+  for(const c of w.cities){
+    if(c.C>c.peak)c.peak=c.C; if(c.Cg>c.peakG)c.peakG=c.Cg;
+    if(c.C>=p.danger)c.dangerMin+=dt; if(c.Cg>=p.danger)c.dangerMinG+=dt;
+  }
+  if(!w.noHist&&w.t-w.lastHist>=HIST_EVERY-1e-9){
+    const[A,B]=w.cities;w.lastHist=w.t;
+    w.hist.push({t:w.t,CA:A.C,CB:B.C,SA:A.S,SB:B.S,gA:A.Cg,gB:B.Cg,pump:w.pump?w.pump.pumpNo:0,batt:w.energy.batt});
+    if(w.hist.length>760)w.hist.shift();
+  }
+  const ai=w.ai;
+  if(w.t>=ai.nextTick-1e-9||(ai.mode==='ARMED'&&ai.scheduled&&w.t>=ai.scheduled.actAt-1e-9)||(ai.mode==='SETTLING'&&!w.pump&&w.t>=ai.settleUntil-1e-9))aiTick(w);
+}
+function energyStep(w,dt){
+  const p=w.p,e=w.energy;
+  e.solarW=p.solarPeakW*sunFrac(w.t)*(cloudy(w)?p.cloudFactor:1);
+  const pumpW=w.pump?p.pumpW*w.pump.power:0,lights=w.cities.filter(c=>c.lightOn).length*p.growLightW;
+  e.loadW=pumpW+lights;
+  e.solarWh+=e.solarW*dt/60;e.pumpWh+=pumpW*dt/60;e.lightWh+=lights*dt/60;
+  e.batt=clamp(e.batt+(e.solarW-e.loadW)*dt/60,0,p.batteryWh);
+  if(e.batt<=0&&lights>0){for(const c of w.cities)c.lightOn=false;addLog(w,'crit','Battery empty: grow lights switched off.');}
+}
+function randomEvents(w,dt){
+  const p=w.p;
+  for(const c of w.cities)if(w.t>=c.eventEnd&&rnd(w)<dt/(60*p.randPollutionH))polluteCity(w,c.id,true);
+  if(!cloudy(w)&&rnd(w)<dt/(60*p.randCloudH))startCloud(w,true);
+  if(!hot(w)&&rnd(w)<dt/(60*p.randHeatH))startHeat(w,true);
+}
+
+function pumpStep(w,dt){
+  const p=w.p,pm=w.pump,D=cityById(w,pm.from),R=cityById(w,pm.to);
+  const reserveL=p.reservePct/100*p.cap;
+  let amt=Math.min(pm.rate*dt,pm.L-pm.moved);
+  const room=Math.min(Math.max(0,D.S-reserveL),Math.max(0,p.cap-R.S));
+  if(amt>room+1e-12){amt=room;pm.guarded=true;}
+  amt=Math.max(0,amt);
+  D.S-=amt;R.S+=amt;pm.moved+=amt;D.donated+=amt;R.received+=amt;w.stats.litres+=amt;
+  pm.elapsed+=dt;
+  if(pm.elapsed>=pm.durSim-1e-9){
+    w.pump=null;w.ai.mode='SETTLING';w.ai.settleUntil=w.t+dt+p.settleS*SIM_PER_REAL_S;
+    const tr=w.transfers[w.transfers.length-1];if(tr){tr.end=w.t+dt;tr.moved=pm.moved;}
+    addLog(w,'pump',`Pump ${pm.pumpNo} stopped: ${f(pm.moved)} L delivered from donor ${pm.from} to receiver ${pm.to}`+(pm.guarded?' (safety guard limited the flow)':'')+`. Waiting ${p.settleS} s for the algae to mix.`);
+  }
+}
+
+// --- AI: learn helpers ---
+function learnSample(c,tm,E,p){
+  const h=Math.floor(hourOf(tm));
+  if(!c.bin)c.bin={h,sum:0,n:0};
+  if(h!==c.bin.h){
+    if(c.bin.n>0){const mean=c.bin.sum/c.bin.n,old=c.profile[c.bin.h];c.profile[c.bin.h]=old==null?mean:(1-p.learnRate)*old+p.learnRate*mean;}
+    c.bin={h,sum:0,n:0};
+  }
+  c.bin.sum+=E;c.bin.n++;
+}
+function learnedE(c,h){
+  const x=h-0.5,i0=Math.floor(x),fr=x-i0;
+  const a=c.profile[((i0%24)+24)%24],b=c.profile[(((i0+1)%24)+24)%24];
+  if(a!=null&&b!=null)return a+(b-a)*fr;
+  if(a!=null)return a; if(b!=null)return b; return null;
+}
+function learnedPct(c){return c.profile.filter(v=>v!=null).length/24;}
+
+// --- AI step 1+2: sense (with fault detection) and learn ---
+function senseCity(w,c){
+  const p=w.p,r=readCO2(c),dt=c.lastT!=null?w.t-c.lastT:0,m=c.sens.m,mPrev=c.lastM??m;
+  let st='ok';
+  if(r==null)st='dead';
+  else if(c.lastReading!=null&&r===c.lastReading)st='stuck';   // a live sensor never repeats exactly in this model
+  c.lastReading=r;
+  if(st==='ok'){
+    if(c.aiStatus&&c.aiStatus!=='ok')addLog(w,'ok',`City ${c.id} CO₂ sensor is responding again. The AI is back on real readings.`);
+    if(c.prevOk&&dt>0){
+      const Cm=(r+c.obsC)/2,Sm=(c.S+c.lastS)/2,mm=(m+mPrev)/2;
+      c.Ehat=Math.max(0,(r-c.obsC)/dt+p.kv*(Cm-p.bg)+p.absorb*mm*Sm*Math.max(0,Cm-p.bg));
+      learnSample(c,(w.t+c.lastT)/2,c.Ehat,p);
+    }
+    c.obsC=r;c.prevOk=true;
+  }else{
+    if(c.aiStatus!==st){addLog(w,'crit',`City ${c.id} CO₂ sensor ${st==='dead'?'is DEAD (no reading)':'is STUCK (same value twice)'}. Switching to a model-based estimate.`);w.flags.sensorFaults++;}
+    if(dt>0&&c.obsC!=null){
+      const lb=learnedE(c,hourOf(w.t-dt/2)),E=lb??c.Ehat??0;c.Ehat=E;
+      const n=Math.max(1,Math.round(dt/DT)),h=dt/n,S=(c.S+c.lastS)/2,mm=(m+mPrev)/2;
+      let C=c.obsC;for(let i=0;i<n;i++)C+=dCdt(C,S,E,p,mm)*h;c.obsC=C;
+    }
+    c.prevOk=false;
+  }
+  c.aiStatus=st;c.lastT=w.t;c.lastS=c.S;c.lastM=m;
+}
+
+// --- AI step 3: predict ---
+function forecastPath(w,c){
+  const p=w.p,H=p.horizonH*60,step=2;
+  const base=learnedE(c,hourOf(w.t)),anomaly=(base==null||c.aiStatus!=='ok')?0:c.Ehat-base;
+  let C=c.obsC,S=c.S,peakC=C,crossT=C>=p.trigger?w.t:null;
+  let nr0=algaeNeeded(c.Ehat,p,c.sens.m),best={nr:nr0,E:c.Ehat,t:w.t,m:c.sens.m};
+  const path=[{t:w.t,C,E:c.Ehat}];
+  for(let tau=step;tau<=H+1e-9;tau+=step){
+    const tt=w.t+tau,lb=learnedE(c,hourOf(tt));
+    const E=lb==null?c.Ehat:Math.max(0,lb+anomaly*Math.exp(-tau/p.anomalyTau)),m=mAt(w,c,tt);
+    for(let k=0;k<step/DT;k++){C+=dCdt(C,S,E,p,m)*DT;S+=dSdt(S,p)*DT;}
+    path.push({t:tt,C,E});
+    if(C>peakC)peakC=C;
+    const nr=algaeNeeded(E,p,m);if(nr>best.nr)best={nr,E,t:tt,m};
+    if(crossT==null&&C>=p.trigger)crossT=tt;
+  }
+  return{path,peakC,peakE:best.E,peakET:best.t,mNeed:best.m,needRaw:best.nr,crossT};
+}
+function assess(w,c){
+  const p=w.p,reserveL=p.reservePct/100*p.cap;
+  let path=null,peakC,peakE,peakET,crossT,mNeed,needRaw;
+  if(p.predictive)({path,peakC,peakE,peakET,crossT,mNeed,needRaw}=forecastPath(w,c));
+  else{peakC=c.obsC;peakE=c.Ehat;peakET=w.t;mNeed=c.sens.m;needRaw=algaeNeeded(peakE,p,mNeed);crossT=c.obsC>=p.trigger?w.t:null;}
+  const need=clamp(needRaw,0,p.cap),gap=need-c.S;
+  const atRisk=crossT!=null,needy=atRisk&&gap>=p.minTransfer;
+  const spare=atRisk?0:Math.max(0,c.S-Math.max(reserveL,need));
+  const urgency=urgencyOf(Math.max(peakC,c.obsC),p);
+  return{path,peakC:Math.max(peakC,c.obsC),peakE,peakET,mNeed,crossT,needRaw,need,gap,atRisk,needy,spare,urgency,priority:urgency*popOf(w,c),feasible:needRaw<=p.cap,reserveL};
+}
+
+// --- AI tick ---
+function aiTick(w){
+  const p=w.p,ai=w.ai;
+  ai.nextTick=w.t+p.aiCheckS*SIM_PER_REAL_S;ai.lastTick=w.t;ai.ticks++;
+  for(const c of w.cities)senseCity(w,c);
+  if(w.observeOnly)return;
+  if(w.cities.some(c=>c.Ehat==null)){
+    ai.decision={headline:'Starting up: taking the first sensor readings',plain:'The AI needs two readings, 1.5 s apart, to estimate how fast each city is producing CO₂.',numbers:[]};return;
+  }
+  for(const c of w.cities)c.fc=assess(w,c);
+  if(w.pump){ai.mode='PUMPING';decideLights(w);return;}
+  if(w.t<ai.settleUntil-1e-9){ai.mode='SETTLING';decideLights(w);return;}
+  decide(w);
+  decideLights(w);
+}
+
+// --- AI step 4: decide ---
+function decide(w){
+  const p=w.p,ai=w.ai,prev=ai.mode;
+  const needy=w.cities.filter(c=>c.fc.needy).sort((a,b)=>b.fc.priority-a.fc.priority||b.fc.gap-a.fc.gap);
+  ai.hold=false;
+  if(!needy.length){
+    if(prev==='ARMED')addLog(w,'ok','Pre-pump cancelled: the new forecast shows the city no longer needs extra algae.');
+    if(prev==='CRITICAL')addLog(w,'ok','Critical state cleared: no city needs algae now.');
+    if(prev==='SETTLING'&&w.transfers.length){
+      const stuck=w.cities.filter(c=>c.fc.atRisk);
+      addLog(w,'ok',stuck.length
+        ?`Result checked: City ${stuck.map(c=>c.id).join(' & ')} is still above or near the trigger, but no useful transfer is left (${stuck.map(c=>c.S>=p.cap-p.minTransfer?'tank nearly full':'gap below '+p.minTransfer+' L').join(', ')}). Its algae keep absorbing; pumps stay off.`
+        :'Result checked: the deficit is closed, so no further transfer is needed and the pumps stay off.');
+    }
+    ai.scheduled=null;ai.mode='MONITORING';ai.decision=explainBalanced(w);return;
+  }
+  const R=needy[0],D=other(w,R);
+  if(D.fc.needy||D.fc.spare<p.minTransfer){
+    if(prev!=='CRITICAL'){addLog(w,'crit',`CRITICAL: City ${R.id} needs ${f(R.fc.gap)} L more algae but City ${D.id} has no safe surplus (spare ${f(D.fc.spare)} L). Pumps held.`);w.flags.critical++;}
+    ai.scheduled=null;ai.mode='CRITICAL';ai.decision=explainCritical(w,R,D);return;
+  }
+  const power=powerFor(R.fc.urgency,p),pulse=pulseCapL(power,p);
+  const want=p.gain*R.fc.gap,free=p.cap-R.S;
+  const lim=[['gain × gap',want],['donor spare',D.fc.spare],['receiver free space',free],['max pump pulse',pulse]];
+  const [limBy,L]=lim.reduce((m,x)=>x[1]<m[1]?x:m);
+  if(L<p.minTransfer){ai.scheduled=null;ai.mode='MONITORING';ai.hold=true;ai.decision=explainHold(w,R,D,L,limBy);return;}
+  const secs=pumpSeconds(L,power,p),durSim=secs*SIM_PER_REAL_S,eNeed=p.pumpW*power*durSim/60;
+  if(w.energy.batt<eNeed){ai.scheduled=null;ai.mode='MONITORING';ai.hold=true;
+    ai.decision={headline:'Battery too low to pump',plain:`City ${R.id} needs algae, but the pump run would use ${f(eNeed)} Wh and the battery holds only ${f(w.energy.batt)} Wh. Waiting for solar charge.`,numbers:tableLines(w)};return;}
+  const pre=p.predictive&&R.obsC<p.trigger&&R.fc.crossT!=null;
+  const actAt=pre?Math.max(w.t,R.fc.crossT-p.leadMin):w.t;
+  const plan={from:D.id,to:R.id,L,power,secs,limBy,want,free,pulse,actAt,pumpNo:R.id==='A'?1:2,pre,pwm:Math.round(power*p.maxPWM),eNeed};
+  ai.decision=explainTransfer(w,R,D,plan);
+  if(actAt>w.t+0.01){
+    if(prev!=='ARMED'){addLog(w,'sched',`Pre-pump scheduled for ${hhmm(actAt)}: ${f(L)} L from donor ${D.id} to receiver ${R.id}. Forecast: City ${R.id} passes ${p.trigger} ppm at ${hhmm(R.fc.crossT)}.`);w.flags.armed++;}
+    ai.mode='ARMED';ai.scheduled=plan;return;
+  }
+  startPump(w,plan);
+}
+// --- AI step 5: act ---
+function startPump(w,plan){
+  const durSim=plan.secs*SIM_PER_REAL_S;
+  w.pump={...plan,durSim,rate:plan.L/durSim,moved:0,elapsed:0,start:w.t,guarded:false};
+  w.ai.mode='PUMPING';w.ai.scheduled=null;w.stats.runs++;w.stats.pumpSecs+=plan.secs;
+  const R=cityById(w,plan.to);
+  w.transfers.push({t:w.t,from:plan.from,to:plan.to,L:plan.L,secs:plan.secs,power:plan.power,pwm:plan.pwm,pumpNo:plan.pumpNo,end:null,moved:0,C0:R.C});
+  addLog(w,'pump',`Pump ${plan.pumpNo} ON: ${f(plan.L)} L from donor ${plan.from} to receiver ${plan.to}, ${f(plan.secs)} s at ${pct(plan.power)} power (PWM ${plan.pwm}) — ${plan.pre?'predictive pre-pump':'City '+plan.to+' at '+f(R.obsC,0)+' ppm'}.`);
+}
+function decideLights(w){
+  const p=w.p,e=w.energy,battPct=e.batt/p.batteryWh*100;
+  for(const c of w.cities){
+    const dark=c.sens.sunL<p.lightSat;
+    const high=c.obsC>=p.trigger||(c.fc&&c.fc.peakC>=p.danger)||(w.ai.mode==='CRITICAL'&&c.fc&&c.fc.needy);
+    const want=p.smartLights&&dark&&battPct>p.lowBatteryPct&&(high||(c.lightOn&&c.obsC>=p.target));
+    if(want!==c.lightOn){
+      c.lightOn=want;
+      addLog(w,'light',want?`Grow lights ON in City ${c.id}: CO₂ is high and light is only ${f(c.sens.sunL,0)}% (battery ${f(battPct,0)}%).`
+        :`Grow lights OFF in City ${c.id}${battPct<=p.lowBatteryPct?' to protect the battery ('+f(battPct,0)+'%)':!dark?': enough daylight':': CO₂ is back near target'}.`);
+    }
+    if(c.lightOn&&(!dark||battPct<=p.lowBatteryPct))w.flags.lightViolations++;
+  }
+  if(!e.lowLogged&&battPct<=p.lowBatteryPct){e.lowLogged=true;addLog(w,'warn',`Battery low (${f(battPct,0)}%): grow lights are blocked until it recharges.`);}
+  if(battPct>p.lowBatteryPct+10)e.lowLogged=false;
+}
+
+// --- explanations ---
+function explainBalanced(w){
+  const p=w.p,[A,B]=w.cities,H=p.horizonH;
+  const pk=c=>p.predictive?`${c.id} peaks at ${f(c.fc.peakC,0)} ppm`:`${c.id} is at ${f(c.obsC,0)} ppm`;
+  let plain=p.predictive
+    ?`Both cities are forecast to stay below the ${p.trigger} ppm trigger for the next ${H} h (${pk(A)}, ${pk(B)}). No algae need to move.`
+    :`Both cities are below the ${p.trigger} ppm trigger (${pk(A)}, ${pk(B)}). Prediction is off, so I only react to CO₂ that is already high.`;
+  const notes=[];
+  for(const c of w.cities)if(c.fc.atRisk&&!c.fc.needy){
+    notes.push(c.fc.gap<0||c.S>=p.cap-p.minTransfer&&!c.fc.feasible
+      ?` City ${c.id} is above or heading past the trigger, but its tank is ${c.S>=p.cap-p.minTransfer?'nearly full':'already stocked'} (${f(c.S)} L). More algae cannot be added, so its own algae and the air exchange must bring CO₂ down.`
+      :` City ${c.id} is heading past the trigger, but it is only ${f(Math.max(0,c.fc.gap))} L short, which is below the ${p.minTransfer} L minimum transfer.`);
+  }
+  return{headline:notes.length?'Monitoring: no useful transfer possible':'Balanced: both cities within limits',plain:plain+notes.join('')+' I check again every 1.5 s (9 simulated minutes).',numbers:tableLines(w)};
+}
+function tableLines(w){
+  const p=w.p,L=[];
+  for(const c of w.cities){
+    const fc=c.fc;
+    L.push(`City ${c.id}: CO₂ ${f(c.obsC,0)} ppm${c.aiStatus!=='ok'?' (model estimate, sensor '+c.aiStatus+')':''}, production ${f(c.Ehat,2)} ppm/min, algae effectiveness m = ${f(c.sens.health,2)} × ${f(c.sens.lf,2)} = ${f(c.sens.m,2)}`);
+    L.push(`  algae needed = (${f(fc.peakE,2)} ÷ (${p.target} − ${p.bg}) − ${p.kv}) ÷ (${p.absorb} × ${f(fc.mNeed,2)}) = ${f(fc.needRaw)} L${fc.needRaw>p.cap?' (more than the '+p.cap+' L tank)':''}`);
+    L.push(`  stock ${f(c.S)} L, ${fc.atRisk?'AT RISK (trigger '+p.trigger+' ppm '+(c.obsC>=p.trigger?'exceeded now':'crossed at '+hhmm(fc.crossT))+')':'below trigger'}, spare = ${fc.atRisk?'0 (at risk, cannot donate)':`${f(c.S)} − max(${f(fc.reserveL)}, ${f(fc.need)}) = ${f(fc.spare)} L`}`);
+  }
+  return L;
+}
+function explainTransfer(w,R,D,plan){
+  const p=w.p,fr=R.fc,fd=D.fc,later=plan.actAt>w.t+0.01;
+  let plain;
+  if(later)plain=`City ${R.id} is heading for trouble. My forecast says its CO₂ will pass ${p.trigger} ppm at ${hhmm(fr.crossT)} and peak near ${f(fr.peakC,0)} ppm. To hold ${p.target} ppm it needs about ${f(fr.need,0)} L of algae but has ${f(R.S,0)} L. City ${D.id} is the donor: it can spare ${f(fd.spare,0)} L and still keep its own needs and the ${p.reservePct}% reserve. I will pump ${f(plan.L)} L from ${D.id} to ${R.id} at ${hhmm(plan.actAt)}, ${p.leadMin} minutes early, so the extra algae have time to absorb CO₂ before the peak.`;
+  else plain=`City ${R.id}'s CO₂ is ${f(R.obsC,0)} ppm and ${R.obsC>=p.trigger?'above':'about to pass'} the ${p.trigger} ppm trigger. It needs about ${f(fr.need,0)} L of algae but has ${f(R.S,0)} L. City ${D.id} is the donor: it can safely spare ${f(fd.spare,0)} L, so I am sending ${f(plan.L)} L from ${D.id} to ${R.id} now. CO₂ will fall gradually as the new algae absorb it, not instantly.`;
+  if(plan.limBy==='max pump pulse')plain+=` This run is capped by the ${p.maxPulseS} s maximum pump pulse. If a gap remains after mixing, I will send more.`;
+  if(plan.limBy==='donor spare')plain+=` The amount is capped so City ${D.id} keeps what it needs.`;
+  if(plan.limBy==='receiver free space')plain+=` The amount is capped by the free space in City ${R.id}'s tank.`;
+  if(!fr.feasible)plain+=` Even a full tank cannot hold ${p.target} ppm in these conditions, so the algae can only soften the peak.`;
+  if(R.aiStatus!=='ok')plain+=` Note: City ${R.id}'s CO₂ sensor is ${R.aiStatus}, so this decision uses a model estimate.`;
+  const n=[];
+  n.push(`${p.predictive?'Forecast hardest moment':'Current production'} in ${R.id}: ${f(fr.peakE,2)} ppm/min${p.predictive?' around '+hhmm(fr.peakET):''}, algae effectiveness m = ${f(fr.mNeed,2)}`);
+  n.push(`Algae needed = (E ÷ (target − background) − air exchange) ÷ (absorption × m)`);
+  n.push(`  = (${f(fr.peakE,2)} ÷ (${p.target} − ${p.bg}) − ${p.kv}) ÷ (${p.absorb} × ${f(fr.mNeed,2)}) = ${f(fr.needRaw)} L${fr.needRaw>p.cap?` → capped at tank size ${p.cap} L`:''}`);
+  n.push(`Gap = need − stock = ${f(fr.need)} − ${f(R.S)} = ${f(fr.gap)} L`);
+  n.push(`Donor ${D.id} spare = stock − max(reserve, own need) = ${f(D.S)} − max(${f(fd.reserveL)}, ${f(fd.need)}) = ${f(fd.spare)} L`);
+  n.push(`Urgency = (peak CO₂ − target) ÷ (danger − target) = (${f(fr.peakC,0)} − ${p.target}) ÷ ${p.danger-p.target} = ${f(fr.urgency,2)}`);
+  n.push(`Priority = urgency × population = ${f(fr.urgency,2)} × ${popOf(w,R)}k = ${f(fr.priority,1)}`);
+  n.push(`Power = ${pct(p.powerMin)} + ${pct(p.powerMax-p.powerMin)} × urgency = ${pct(plan.power)}  → PWM ${plan.pwm} of ${p.maxPWM}`);
+  n.push(`Pulse limit = max pulse × power ÷ s/L = ${p.maxPulseS} × ${f(plan.power,2)} ÷ ${p.secPerL} = ${f(plan.pulse)} L`);
+  n.push(`Litres = min(gain × gap ${f(plan.want)}, spare ${f(fd.spare)}, free space ${f(plan.free)}, pulse ${f(plan.pulse)}) = ${f(plan.L)} L   ← limited by ${plan.limBy}`);
+  n.push(`Pump time = litres × s/L ÷ power = ${f(plan.L)} × ${p.secPerL} ÷ ${f(plan.power,2)} = ${f(plan.secs,1)} s  (uses ${f(plan.eNeed,1)} Wh)`);
+  if(later)n.push(`Start time = trigger crossing ${hhmm(fr.crossT)} − lead ${p.leadMin} min = ${hhmm(plan.actAt)}`);
+  return{headline:`Donor ${D.id} → receiver ${R.id}: send ${f(plan.L)} L of algae`,plain,numbers:n};
+}
+function explainCritical(w,R,D){
+  const p=w.p,growth=dSdt(R.S,p)*60;
+  const why=D.fc.needy?`City ${D.id} also needs algae (it is forecast above the trigger)`:`City ${D.id} can only spare ${f(D.fc.spare)} L without going below its own need or the ${p.reservePct}% reserve`;
+  const both=D.fc.needy?` Both need algae, so they are ranked by urgency × population: ${R.id} ${f(R.fc.priority,1)} vs ${D.id} ${f(D.fc.priority,1)}.`:'';
+  return{headline:'No city can safely give algae',plain:`City ${R.id} needs ${f(R.fc.gap,0)} L more algae, but ${why}.${both} Moving algae now would just move the problem, so I am holding the pumps, boosting the grow lights where it is dark, and waiting for regrowth (about ${f(growth,1)} L per simulated hour in City ${R.id}'s tank).`,numbers:tableLines(w)};
+}
+function explainHold(w,R,D,L,limBy){
+  const p=w.p;
+  return{headline:'Gap too small to pump',plain:`City ${R.id} could use a little more algae (gap ${f(R.fc.gap)} L), but the safe transfer is only ${f(L)} L, limited by ${limBy}. That is below the ${p.minTransfer} L minimum, so I am not running the pump. This avoids pump chatter.`,numbers:tableLines(w)};
+}
+
+// --- user / random actions ---
+function polluteCity(w,id,random){
+  const c=cityById(w,id),dur=w.p.eventRealS*SIM_PER_REAL_S;
+  c.eventEnd=w.t+dur;
+  addLog(w,'warn',`${random?'Random event: p':'P'}ollution in City ${id}: +${w.p.pollution} ppm/min of CO₂ for ${dur} simulated minutes.`);
+}
+function startCloud(w,random){w.env.cloudEnd=w.t+w.p.weatherH*60;addLog(w,'warn',`${random?'Random event: c':'C'}loudy day for ${w.p.weatherH} h: sunlight and solar power drop to ${pct(w.p.cloudFactor)}.`);}
+function startHeat(w,random){w.env.heatEnd=w.t+w.p.weatherH*60;addLog(w,'warn',`${random?'Random event: h':'H'}eat wave for ${w.p.weatherH} h: tank water +${w.p.heatWaveC} °C, algae health falls.`);}
+function setFault(w,id,mode){
+  const c=cityById(w,id);c.fault=mode;if(mode==='stuck')c.stuckVal=c.C;
+  addLog(w,'warn',`Fault injected: City ${id} CO₂ sensor ${mode==='ok'?'repaired':mode.toUpperCase()}.`);
+}
+
+// --- self tests ---
+function runFor(w,mins,onStep){const end=w.t+mins;while(w.t<end-1e-9){stepWorld(w,DT);if(onStep)onStep(w);}return w;}
+function freshWorld(p,{pretrained=true}={}){const w=createWorld(p);if(pretrained)pretrain(w);return w;}
+function selfTests(pIn){
+  const P0=cloneParams(pIn||defaultParams());P0.randomEvents=false;const out=[];
+  const ok=(name,pass,detail)=>out.push({name,pass:!!pass,detail});
+  {const E=5,S=50;let C=P0.bg;for(let i=0;i<40000;i++)C+=dCdt(C,S,E,P0,1)*DT;const an=steadyC(E,S,P0,1);
+   ok('Rate equation settles where the formula says',Math.abs(C-an)<0.5,`E=${E} ppm/min, S=${S} L: simulated ${f(C,2)} ppm vs formula ${f(an,2)} ppm`);}
+  {const E=6,m=0.8,S=algaeNeeded(E,P0,m),Cs=steadyC(E,S,P0,m);
+   ok('"Algae needed" really holds the target',Math.abs(Cs-P0.target)<1e-6,`E=${E}, m=${m} → need ${f(S,2)} L → steady CO₂ ${f(Cs,3)} ppm (target ${P0.target})`);}
+  {const p=cloneParams(P0);p.growth=0;const w=freshWorld(p);const tot0=w.cities[0].S+w.cities[1].S;let maxErr=0;
+   polluteCity(w,'A');runFor(w,600,ww=>{maxErr=Math.max(maxErr,Math.abs(ww.cities[0].S+ww.cities[1].S-tot0));});
+   ok('Transfers conserve algae (nothing created or lost)',maxErr<1e-9&&w.stats.litres>0,`${f(w.stats.litres)} L moved, total stock drift ${maxErr.toExponential(1)} L`);}
+  {const w=freshWorld(P0);runFor(w,300);const tr=w.transfers[0];
+   ok('Predictive pre-pump before the morning rush (B → A)',tr&&tr.from==='B'&&tr.to==='A'&&tr.C0<P0.trigger&&w.flags.armed>0,
+     tr?`scheduled first, pump started ${hhmm(tr.t)} with City A at ${f(tr.C0,0)} ppm (< ${P0.trigger}); peak A ${f(w.cities[0].peak,0)} ppm vs ${f(w.cities[0].peakG,0)} with no network`:'no transfer happened');}
+  {const w=freshWorld(P0);runFor(w,300);polluteCity(w,'A');let guard=0;while(!w.pump&&guard++<2000)stepWorld(w,DT);
+   let pass=false,det='no pump started';
+   if(w.pump){const R=w.pump.to,twin=structuredClone(w);twin.pump=null;twin.ai.mode='MONITORING';twin.ai.settleUntil=1e12;twin.ai.nextTick=1e12;
+     const c0=cityById(w,R).C;runFor(w,1);runFor(twin,1);const d1=cityById(twin,R).C-cityById(w,R).C;
+     runFor(w,89);runFor(twin,89);const d90=cityById(twin,R).C-cityById(w,R).C;
+     pass=Math.abs(d1)<0.5&&d90>5;det=`City ${R}: after 1 sim-min CO₂ is only ${f(d1,3)} ppm lower than without the transfer; after 90 sim-min it is ${f(d90,1)} ppm lower (CO₂ at pump start ${f(c0,0)} ppm)`;}
+   ok('Algae arrive first, CO₂ falls gradually',pass,det);}
+  {const w=freshWorld(P0);runFor(w,8*60);const n0=w.transfers.length;polluteCity(w,'B');let guard=0;while(!(w.pump&&w.pump.to==='B')&&guard++<720)stepWorld(w,DT);
+   const tr=w.transfers.slice(n0).find(t=>t.to==='B');let det='no A → B transfer';
+   if(tr){const twin=structuredClone(w);twin.pump=null;twin.ai.nextTick=1e12;twin.ai.settleUntil=1e12;twin.ai.mode='MONITORING';
+     let pkW=0,pkT=0;runFor(w,180,ww=>{pkW=Math.max(pkW,ww.cities[1].C);});runFor(twin,180,ww=>{pkT=Math.max(pkT,ww.cities[1].C);});
+     det=`pump 2 started ${hhmm(tr.t)}, ${f(tr.L)} L from donor A; B's peak ${f(pkW,0)} ppm vs ${f(pkT,0)} ppm if that transfer were cancelled`;}
+   ok('Reverse flow works (pollute B → algae A → B, pump 2)',tr&&tr.from==='A'&&tr.pumpNo===2,det);}
+  {const w=freshWorld(P0);const res=P0.reservePct/100*P0.cap;let minDon=1e9,maxS=0,maxSecs=0,bMin=1e9,bMax=-1;
+   const chk=ww=>{for(const c of ww.cities)maxS=Math.max(maxS,c.S);bMin=Math.min(bMin,ww.energy.batt);bMax=Math.max(bMax,ww.energy.batt);if(ww.pump){const d=cityById(ww,ww.pump.from);minDon=Math.min(minDon,d.S);maxSecs=Math.max(maxSecs,ww.pump.secs);}};
+   runFor(w,5*60,chk);polluteCity(w,'A');runFor(w,240,chk);polluteCity(w,'B');runFor(w,240,chk);polluteCity(w,'A');polluteCity(w,'B');const crit0=w.flags.critical;runFor(w,240,chk);runFor(w,900,chk);
+   ok('Donor never goes below the reserve; tanks never overflow',minDon>=res-1e-9&&maxS<=P0.cap+1e-9,`lowest donor stock while pumping ${f(minDon)} L (reserve ${f(res)} L); highest stock ${f(maxS,2)} L (tank ${P0.cap} L)`);
+   ok('Pump runs never exceed the maximum pulse',maxSecs<=P0.maxPulseS+1e-9,`longest run ${f(maxSecs,2)} s (limit ${P0.maxPulseS} s)`);
+   ok('Pollute both → AI holds pumps (CRITICAL)',w.flags.critical>crit0,`CRITICAL states entered: ${w.flags.critical-crit0}`);
+   ok('Energy: battery stays within limits; lights only when dark and battery OK',bMin>=0&&bMax<=P0.batteryWh+1e-9&&w.flags.lightViolations===0,`battery range ${f(bMin,0)}–${f(bMax,0)} Wh of ${P0.batteryWh} Wh; grow-light time A ${f(w.cities[0].lightMin,0)} min, B ${f(w.cities[1].lightMin,0)} min; rule violations ${w.flags.lightViolations}`);}
+  {const w=freshWorld(P0);runFor(w,300);polluteCity(w,'A');runFor(w,420);const late=w.transfers.filter(t=>t.t>w.t-120).length;
+   ok('AI stops when the problem is over',late===0&&!w.pump,`transfers in the last 2 sim-hours: ${late}; mode ${w.ai.mode}`);}
+  {const w=freshWorld(P0);runFor(w,7*60);setFault(w,'A','stuck');runFor(w,120);const A=w.cities[0];const e1=Math.abs(A.obsC-A.C);
+   setFault(w,'A','dead');runFor(w,60);const e2=Math.abs(A.obsC-A.C);
+   ok('Stuck / dead CO₂ sensor detected and replaced by model estimate',w.flags.sensorFaults>=2&&e1<15&&e2<15,`faults detected: ${w.flags.sensorFaults}; estimate error after 2 h stuck ${f(e1,1)} ppm, after 1 h dead ${f(e2,1)} ppm`);}
+  {const w=freshWorld(P0);runFor(w,6*60);const twin=structuredClone(w);startHeat(w);runFor(w,30);runFor(twin,30);
+   const hA=w.cities[0].sens.health,nW=w.cities[0].fc.needRaw,nT=twin.cities[0].fc.needRaw;
+   ok('Heat wave lowers algae health and raises algae need',hA<0.95&&nW>nT,`health ${f(hA,2)} (normal ${f(twin.cities[0].sens.health,2)}); algae needed ${f(nW)} L vs ${f(nT)} L`);}
+  {const w=freshWorld(P0);let err=0;for(let h=0;h<24;h++){let s=0;for(let k=0;k<60;k++)s+=emissionTrue(P0.profiles.A,h*60+k+0.5);err=Math.max(err,Math.abs(w.cities[0].profile[h]-s/60));}
+   ok('Learned pattern matches the model pattern',err<0.15,`largest hourly error ${f(err,3)} ppm/min (City A, after 3-day pre-training)`);}
+  return out;
+}
+/*CORE-END*/
+
+// ===================== UI =====================
+let P=defaultParams(), W=null, running=false, speed=1, simAcc=0, showGhost=true;
+const $=id=>document.getElementById(id);
+const COL={A:'#fb923c',B:'#38bdf8',green:'#34d399',cyan:'#22d3ee',amber:'#fbbf24',red:'#f87171',purple:'#a78bfa',pink:'#f472b6',grid:'rgba(255,255,255,.07)',text:'#eeeefe',muted:'#a6a9cc',dim:'#7174a0'};
+
+function cityCardHTML(id){
+  const sub=id==='A'?'Industrial · strong morning rush':'Residential · milder pattern';
+  return `<div class="city-head"><span class="cdot" style="background:${COL[id]}"></span><h3>City ${id}<small>${sub}</small></h3><span class="chip" id="chip${id}">OK</span></div>
+  <div class="role ok" id="role${id}"><span class="ic">✓</span><div><b>SELF-SUFFICIENT</b><span></span></div></div>
+  <div class="city-main">
+    <div class="big"><div class="lbl">CO₂ <span class="simtag">SIM</span></div><div class="val"><span id="co2${id}">—</span><u>ppm</u></div><div class="trend" id="trend${id}"></div></div>
+    <div class="kv">
+      <div><span>Algae stock</span><b id="stk${id}">—</b></div>
+      <div><span>Algae needed</span><b id="need${id}">—</b></div>
+      <div><span>Spare to give</span><b id="spr${id}">—</b></div>
+      <div><span>Reserve</span><b id="res${id}">—</b></div>
+      <div><span>CO₂ production</span><b id="em${id}">—</b></div>
+      <div><span>Absorbed now</span><b id="abs${id}">—</b></div>
+    </div>
+  </div>
+  <div class="sens">
+    <div class="sens-h"><span>Sensors <span class="simtag">SIM</span></span><button class="btn small" data-fault="${id}" id="flt${id}">Sensor fault: off</button></div>
+    <div class="sens-g">
+      <div class="sv" id="svC${id}"><span>CO₂ sensor</span><b id="sC${id}">—</b></div>
+      <div class="sv"><span>Level</span><b id="sL${id}">—</b></div>
+      <div class="sv" id="svT${id}"><span>Temperature</span><b id="sT${id}">—</b></div>
+      <div class="sv" id="svP${id}"><span>pH</span><b id="sP${id}">—</b></div>
+      <div class="sv" id="svU${id}"><span>Turbidity</span><b id="sU${id}">—</b></div>
+      <div class="sv" id="svI${id}"><span>Light</span><b id="sI${id}">—</b></div>
+      <div class="sv" id="svH${id}"><span>Algae health</span><b id="sH${id}">—</b></div>
+      <div class="sv" id="svG${id}"><span>Grow light</span><b id="sG${id}">—</b></div>
+    </div>
+  </div>
+  <div class="evt" id="evt${id}"></div>
+  <canvas class="chart" id="chart${id}"></canvas>
+  <div class="pat-head"><span>Learned daily CO₂-production pattern <span style="color:#dfe9ee">▮</span> learned <span style="color:#8ea8b5">▬</span> model truth</span><span id="learn${id}"></span></div>
+  <canvas class="pattern" id="pat${id}"></canvas>
+  <div class="city-actions"><button class="btn warn small" data-pollute="${id}">☁ Pollute City ${id}</button><button class="btn hold small" data-hold="${id}">Hold to emit CO₂</button></div>`;
+}
+$('cardA').innerHTML=cityCardHTML('A');$('cardB').innerHTML=cityCardHTML('B');
+
+// ---- settings UI ----
+const DOC_SET=[
+ ['target','CO₂ target','ppm',450,800,10,0],['danger','Danger level','ppm',650,1200,10,0],['trigger','Trigger level','ppm',500,1100,5,0],
+ ['reservePct','Donor reserve','%',0,60,1,0],['gain','Transfer gain','',0.1,1,0.05,2],['minTransfer','Minimum transfer','L',0,20,1,0],
+ ['leadMin','Pre-pump lead time','sim-min',0,180,5,0],['horizonH','Forecast horizon','h',1,6,0.5,1],['pollution','Pollution strength','ppm/min',1,30,1,0],
+ ['secPerL','Pump time per litre','s/L',0.1,1,0.01,2],['maxPulseS','Max pump pulse','s',2,30,1,0],['settleS','Settling pause','s',0,10,0.5,1]];
+const HW_SET=[['maxPWM','Max PWM','',100,255,5,0]];
+const slHTML=([k,l,u,mn,mx,st,d])=>`<div class="sl"><label for="s_${k}">${l}</label><output id="o_${k}"></output><input type="range" id="s_${k}" min="${mn}" max="${mx}" step="${st}" data-k="${k}"><div class="src">Guide default: ${defaultParams()[k]} ${u}</div></div>`;
+$('docSettings').innerHTML=DOC_SET.map(slHTML).join('');
+$('hwPwm').innerHTML=HW_SET.map(slHTML).join('');
+function syncSliders(){[...DOC_SET,...HW_SET].forEach(([k,,u,,,,d])=>{$('s_'+k).value=P[k];$('o_'+k).textContent=Number(P[k]).toFixed(d)+(u?' '+u:'');});}
+function onSlider(e){
+  const el=e.target;if(!el.dataset.k)return;const k=el.dataset.k;
+  P[k]=parseFloat(el.value);let warn='';
+  if(P.trigger<=P.target){P.trigger=P.target+5;warn='Trigger must be above the target. Adjusted.';}
+  if(P.danger<=P.trigger){P.danger=P.trigger+5;warn='Danger level must be above the trigger. Adjusted.';}
+  $('setWarn').textContent=warn;
+  for(const kk of ['target','danger','trigger',k])W.p[kk]=P[kk];
+  syncSliders();
+}
+$('docSettings').addEventListener('input',onSlider);$('hwPwm').addEventListener('input',onSlider);
+const RESET_KEYS=['cap','initA','initB','batteryWh','batteryStartPct'];
+const ASM=[
+ ['bg','Background (outdoor) CO₂','ppm','Approximate present-day outdoor level. A reference value, not from the guide.'],
+ ['kv','Air exchange with outdoors','1/min','How fast city air mixes with outdoor air.'],
+ ['absorb','Algae CO₂ uptake coefficient','1/(L·min)','Uptake = coefficient × m × litres × (CO₂ − background).'],
+ ['growth','Algae growth rate (logistic)','1/min','Regrowth of algae towards a full tank.'],
+ ['cap','Tank capacity','L','Simulated tank size. *'],
+ ['initA','Starting stock, City A','L','*'],['initB','Starting stock, City B','L','*'],
+ ['popA','Population, City A','thousand','Used only for the priority rule (urgency × population).'],
+ ['popB','Population, City B','thousand',''],
+ ['lightFloor','Uptake in darkness','fraction','Share of full uptake with no light. Full uptake above the light level below.'],
+ ['lightSat','Light for full uptake','%',''],
+ ['growLightPct','Grow-light strength','% light',''],
+ ['heatWaveC','Heat-wave warming','°C','Health is 100% at 20–30 °C, falling to 0 at 10 °C and 40 °C. pH: 100% at 7–9. Turbidity: 100% below 100 NTU.'],
+ ['solarPeakW','Solar panel peak','W','Demo-scale energy system.'],
+ ['batteryWh','Battery capacity','Wh','*'],['pumpW','Pump power at 100%','W',''],['growLightW','Grow light power (each)','W',''],
+ ['lowBatteryPct','Low-battery limit for lights','%',''],
+ ['randPollutionH','Random pollution, average gap','h','Per city, when Random events is on.']];
+function buildAsm(){
+  let h='<tr><th>Parameter</th><th>Value</th><th>Source</th></tr>';
+  h+=ASM.map(([k,l,u,n])=>`<tr><td>${l}${n?`<div class="note" style="margin:0">${n}</div>`:''}</td><td><input type="number" step="any" data-a="${k}" value="${P[k]}"> <span class="note">${u}</span></td><td><span class="src-asm">ASSUMPTION</span></td></tr>`).join('');
+  for(const id of ['A','B']){const pr=P.profiles[id];
+    h+=`<tr><td>City ${id} CO₂ production profile<div class="note" style="margin:0">ppm/min = base + morning·g(${pr.mh}h) + evening·g(${pr.eh}h), g = Gaussian, width ${pr.w} h</div></td><td>base <input type="number" step="any" data-pf="${id}.base" value="${pr.base}"><br>morning <input type="number" step="any" data-pf="${id}.m" value="${pr.m}"><br>evening <input type="number" step="any" data-pf="${id}.e" value="${pr.e}"></td><td><span class="src-asm">ASSUMPTION</span></td></tr>`;}
+  h+=`<tr><td>Forecast spike fade time<div class="note" style="margin:0">How long an unusual spike is assumed to last in the forecast.</div></td><td><input type="number" step="any" data-a="anomalyTau" value="${P.anomalyTau}"> <span class="note">sim-min</span></td><td><span class="src-ai">AI DESIGN</span></td></tr>`;
+  h+=`<tr><td>Pattern learning rate<div class="note" style="margin:0">Weight of the newest day when updating an hour of the learned pattern.</div></td><td><input type="number" step="any" data-a="learnRate" value="${P.learnRate}"></td><td><span class="src-ai">AI DESIGN</span></td></tr>`;
+  $('asmTable').innerHTML=h;
+}
+$('asmTable').addEventListener('change',e=>{
+  const el=e.target,v=parseFloat(el.value);if(!isFinite(v)||v<0){el.value=el.dataset.a?P[el.dataset.a]:'';return;}
+  if(el.dataset.a){const k=el.dataset.a;P[k]=v;if(!RESET_KEYS.includes(k))W.p[k]=v;if(k==='randPollutionH')updRndInfo();}
+  if(el.dataset.pf){const[id,k]=el.dataset.pf.split('.');P.profiles[id][k]=v;W.p.profiles[id][k]=v;}
+});
+function updRndInfo(){$('rndInfo').textContent=`${P.randPollutionH} h per city for pollution, ${P.randCloudH} h for clouds, ${P.randHeatH} h for heat waves`;}
+
+// ---- controls ----
+const SPEEDS=[0.5,1,2,4,8];
+$('speedSeg').innerHTML=SPEEDS.map(s=>`<button data-s="${s}" class="${s===1?'on':''}">${s}×</button>`).join('');
+$('speedSeg').addEventListener('click',e=>{const s=e.target.dataset.s;if(!s)return;speed=+s;[...$('speedSeg').children].forEach(b=>b.classList.toggle('on',+b.dataset.s===speed));});
+function setRunning(r){running=r;$('btnPlay').textContent=r?'❚❚ Pause':'▶ Start';$('btnPlay').classList.toggle('pulse',!r);const hl=$('heroLive');hl.className='live-dot'+(r?' on':'');hl.lastChild.textContent=r?'LIVE':'PAUSED';}
+$('btnPlay').onclick=()=>setRunning(!running);
+$('btnReset').onclick=()=>reset();
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA|BUTTON|SELECT/.test(e.target.tagName)){e.preventDefault();setRunning(!running);}});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-pollute]');
+  if(b){for(const id of b.dataset.pollute.split(''))polluteCity(W,id);if(!running)setRunning(true);return;}
+  const fb=e.target.closest('[data-fault]');
+  if(fb){const c=cityById(W,fb.dataset.fault),next={ok:'stuck',stuck:'dead',dead:'ok'}[c.fault];setFault(W,c.id,next);}
+});
+$('btnCloud').onclick=()=>{startCloud(W);if(!running)setRunning(true);};
+$('btnHeat').onclick=()=>{startHeat(W);if(!running)setRunning(true);};
+$('btnClear').onclick=()=>{for(const c of W.cities){if(c.eventEnd>W.t)c.eventEnd=W.t;c.holding=false;}W.env.cloudEnd=W.env.heatEnd=W.t;addLog(W,'ok','All pollution and weather events cleared by user.');};
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-hold]');if(!b)return;e.preventDefault();const c=cityById(W,b.dataset.hold);c.holding=true;b.classList.add('on');if(!running)setRunning(true);addLog(W,'warn',`User is emitting CO₂ into City ${c.id} (+${W.p.pollution} ppm/min while held).`);});
+const release=()=>{document.querySelectorAll('[data-hold].on').forEach(x=>{x.classList.remove('on');cityById(W,x.dataset.hold).holding=false;});};
+document.addEventListener('pointerup',release);document.addEventListener('pointercancel',release);
+$('optPred').onchange=e=>{P.predictive=W.p.predictive=e.target.checked;addLog(W,'ok',`Predictive pumping ${e.target.checked?'ON: acting on the 3 h forecast':'OFF: reacting only to CO₂ already above the trigger'}.`);};
+$('optLights').onchange=e=>{P.smartLights=W.p.smartLights=e.target.checked;addLog(W,'ok',`Smart grow lights ${e.target.checked?'enabled':'disabled'}.`);};
+$('optRand').onchange=e=>{P.randomEvents=W.p.randomEvents=e.target.checked;addLog(W,'ok',`Random events ${e.target.checked?'ON':'OFF'}.`);};
+$('optPre').onchange=e=>{P.pretrained=e.target.checked;addLog(W,'ok',`Pre-trained pattern will be ${e.target.checked?'used':'cleared'} on the next Reset.`);};
+$('optGhost').onchange=e=>{showGhost=e.target.checked;};
+$('btnChecks').onclick=()=>{
+  $('checks').innerHTML='<p class="note">Running…</p>';
+  setTimeout(()=>{const t0=performance.now();const res=selfTests(P);const ms=performance.now()-t0;
+    const passN=res.filter(r=>r.pass).length;
+    $('checks').innerHTML=`<p class="note"><b style="color:${passN===res.length?'#3ddc97':'#ff5f5f'}">${passN}/${res.length} checks passed</b> (${f(ms,0)} ms, current settings)</p>`+res.map(r=>`<div><span class="${r.pass?'p':'f'}">${r.pass?'PASS':'FAIL'}</span><span>${r.name}<small>${r.detail}</small></span></div>`).join('');},30);
+};
+
+function reset(){
+  W=createWorld(P);
+  if(P.pretrained)pretrain(W);
+  else addLog(W,'ok','AI starts with no learned pattern. It will learn each city hour by hour.');
+  addLog(W,'ok',`Simulation reset: Day 1, 05:00. City A ${f(P.initA)} L algae, City B ${f(P.initB)} L (tank ${P.cap} L). Battery ${P.batteryStartPct}%.`);
+  aiTick(W);
+  parts={smoke:[],co2A:[],co2B:[],intake:[],flow:[],cars:null};
+  lastLogKey='';setRunning(false);hwStopAll();
+}
+
+// ===================== HARDWARE LINK (Web Serial) =====================
+const HW={port:null,reader:null,writer:null,connected:false,rx:'',pending:{},enc:new TextEncoder(),demo:true,auto:true,
+  test:null,simKey:null,simSpeed:null,connecting:false};
+try{const a=localStorage.getItem('mirage-autoconnect');if(a!=null)HW.auto=a==='1';}catch(_){}
+$('optAuto').checked=HW.auto;
+function con(line,cls){const b=$('console');const d=document.createElement('div');d.textContent=line;if(cls)d.className=cls;b.appendChild(d);while(b.children.length>120)b.removeChild(b.firstChild);b.scrollTop=b.scrollHeight;}
+function hwAlert(msg){const a=$('hwAlert');if(msg){a.style.display='block';a.textContent=msg;}else a.style.display='none';}
+function hwLive(){return HW.connected&&!HW.demo;}
+const ARDUINO_VIDS=[0x2341,0x2A03,0x1A86,0x0403,0x10C4];
+async function hwOpen(port,how){
+  if(HW.connecting||HW.connected)return false;
+  HW.connecting=true;
+  try{
+    await port.open({baudRate:115200});
+    HW.port=port;HW.writer=port.writable.getWriter();HW.connected=true;HW.demo=false;
+    const i=port.getInfo?port.getInfo():{};
+    con(`Connected ${how}${i.usbVendorId?` (USB ${i.usbVendorId.toString(16)}:${(i.usbProductId||0).toString(16)})`:''}. Waiting about 2 s for the Arduino to restart…`,'ok');
+    hwReadLoop();
+    setTimeout(()=>{if(HW.connected)hwSend('PING','PONG');},1900);
+    return true;
+  }catch(e){con('Could not open the port: '+e.message+' (is the Serial Monitor still open?)','er');return false;}
+  finally{HW.connecting=false;updateMode();}
+}
+async function hwConnect(){
+  if(!('serial' in navigator)){con('Web Serial is not available here. Open this file in Chrome or Edge on a computer.','er');hwAlert('This browser cannot talk to the Arduino. Use Chrome or Edge on a computer. Demo mode stays on.');HW.demo=true;updateMode();return false;}
+  try{const port=await navigator.serial.requestPort();return await hwOpen(port,'by choice');}
+  catch(e){con('No port chosen: '+e.message,'er');HW.demo=!HW.connected;updateMode();return false;}
+}
+async function hwAutoConnect(reason){
+  if(!HW.auto||HW.connected||HW.connecting||!('serial' in navigator))return;
+  try{
+    const ports=await navigator.serial.getPorts();
+    if(!ports.length){if(reason==='load')con('Auto-connect: no Arduino has been approved yet. Press Connect Arduino once and choose its port.');return;}
+    const pick=ports.find(p=>{const i=p.getInfo?p.getInfo():{};return ARDUINO_VIDS.includes(i.usbVendorId);})||ports[0];
+    con(`Auto-connect (${reason}): found an approved port, connecting…`);
+    await hwOpen(pick,'automatically');
+  }catch(e){con('Auto-connect failed: '+e.message,'er');}
+}
+async function hwReadLoop(){
+  const dec=new TextDecoder();
+  try{
+    HW.reader=HW.port.readable.getReader();
+    while(true){
+      const {value,done}=await HW.reader.read();if(done)break;
+      HW.rx+=dec.decode(value,{stream:true});
+      let i;while((i=HW.rx.indexOf('\n'))>=0){const l=HW.rx.slice(0,i).trim();HW.rx=HW.rx.slice(i+1);if(l)hwOnLine(l);}
+    }
+  }catch(e){con('Serial error: '+e.message,'er');}
+  finally{try{HW.reader.releaseLock();}catch(_){}if(HW.connected){HW.connected=false;HW.demo=true;try{HW.writer.releaseLock();}catch(_){}try{await HW.port.close();}catch(_){}HW.port=null;con('Arduino disconnected. Back to Demo mode.','er');updateMode();}}
+}
+function hwOnLine(l){
+  con('← '+l,'rx');
+  for(const key of Object.keys(HW.pending)){if(l.startsWith(key)){clearTimeout(HW.pending[key]);delete HW.pending[key];hwAlert('');}}
+  if(l.startsWith('READY'))hwAlert('');
+}
+async function hwSend(line,expect){
+  if(!HW.writer)return;
+  try{await HW.writer.write(HW.enc.encode(line+'\n'));con('→ '+line,'tx');}catch(e){con('Write failed: '+e.message,'er');return;}
+  if(expect){clearTimeout(HW.pending[expect]);HW.pending[expect]=setTimeout(()=>{delete HW.pending[expect];hwAlert(`The Arduino did not acknowledge "${line}" within 1.5 s. Check the USB cable, the sketch (algaegrid.ino, 115200 baud) and that the Serial Monitor is closed.`);addLog(W,'crit','Hardware: Arduino did not acknowledge a command within 1.5 s.');},1500);}
+}
+async function hwDisconnect(){
+  if(!HW.connected)return;
+  await hwSend('STOP');
+  HW.connected=false;
+  try{await HW.reader.cancel();}catch(_){}
+  try{HW.writer.releaseLock();}catch(_){}
+  try{await HW.port.close();}catch(_){}
+  HW.port=null;HW.demo=true;con('Disconnected. Demo mode on.');updateMode();
+}
+function updateMode(){
+  const [txt,cls]=HW.demo?['DEMO · VIRTUAL PUMPS','pill']:HW.connected?['HARDWARE LIVE · ARDUINO','pill live']:['NOT CONNECTED','pill off'];
+  for(const id of ['modePill','modePillTop']){const e=$(id);e.textContent=txt;e.className=(id==='modePill'?'tag ':'')+cls;}
+  $('optDemo').checked=HW.demo;
+  $('btnConnect').textContent=HW.connected?'⏏ Disconnect':'🔌 Connect Arduino';
+}
+function hwStopAll(){HW.test=null;if(hwLive())hwSend('STOP');HW.simKey=null;}
+$('btnConnect').onclick=async()=>{if(HW.connected){await hwDisconnect();}else await hwConnect();};
+$('optDemo').onchange=async e=>{
+  if(e.target.checked){HW.demo=true;if(HW.connected)hwSend('STOP');HW.simKey=null;con('Demo mode on: commands go to the virtual pins only.');}
+  else{if(!HW.connected){await hwAutoConnect('demo off');if(!HW.connected)await hwConnect();}else{HW.demo=false;con('Demo mode off: commands go to the Arduino.','ok');}}
+  updateMode();
+};
+$('optAuto').onchange=e=>{HW.auto=e.target.checked;try{localStorage.setItem('mirage-autoconnect',HW.auto?'1':'0');}catch(_){}con(`Auto-connect ${HW.auto?'ON':'OFF'}.`);if(HW.auto)hwAutoConnect('enabled');};
+function testPump(n){
+  const pwm=Math.round(0.8*P.maxPWM);HW.test={n,until:realTime+3,pwm};
+  con(`Test pump ${n}: ${n===1?'B → A':'A → B'}, 3 s at PWM ${pwm}${hwLive()?'':' (virtual)'}.`);
+  if(hwLive())hwSend(`RUN ${n} ${pwm} 3000`,'ACK RUN');
+}
+$('btnT1').onclick=()=>testPump(1);$('btnT2').onclick=()=>testPump(2);
+$('btnStop').onclick=()=>{HW.test=null;if(W.pump){W.pump.L=W.pump.moved;W.pump.durSim=W.pump.elapsed;addLog(W,'warn','User pressed Stop pumps: current transfer ended early.');}if(hwLive())hwSend('STOP');else con('STOP (virtual).');};
+if('serial' in navigator){
+  navigator.serial.addEventListener('connect',()=>{con('A USB serial device was plugged in.');hwAutoConnect('plugged in');});
+  navigator.serial.addEventListener('disconnect',e=>{if(HW.port&&e.target===HW.port)con('The Arduino was unplugged.','er');});
+}
+// keep the real pump in step with the on-screen pump (scaled by speed; stops on pause)
+function hwSync(){
+  if(!hwLive())return;
+  const pm=W.pump,key=pm?pm.start+'|'+pm.pumpNo:null;
+  if(pm&&running&&(HW.simKey!==key||HW.simSpeed!==speed)){
+    const ms=Math.max(50,Math.round((pm.durSim-pm.elapsed)/SIM_PER_REAL_S/speed*1000));
+    hwSend(`RUN ${pm.pumpNo} ${pm.pwm} ${ms}`,'ACK RUN');HW.simKey=key;HW.simSpeed=speed;
+  }else if((!pm||!running)&&HW.simKey){hwSend('STOP');HW.simKey=null;}
+}
+function pinState(n){
+  const pm=W.pump,t=HW.test&&HW.test.n===n&&realTime<HW.test.until?HW.test:null;
+  if(pm&&pm.pumpNo===n&&running)return{on:true,pwm:pm.pwm};
+  if(t)return{on:true,pwm:t.pwm};
+  return{on:false,pwm:0};
+}
+function updatePins(){
+  if(HW.test&&realTime>=HW.test.until)HW.test=null;
+  for(const n of [1,2]){const s=pinState(n);
+    $('p'+n+'ena').style.width=(s.pwm/255*100)+'%';$('p'+n+'enaV').textContent=s.pwm;
+    const i1=$('p'+n+'in1');i1.textContent=s.on?'HIGH':'LOW';i1.className=s.on?'hi':'lo';
+    const i2=$('p'+n+'in2');i2.textContent='LOW';i2.className='lo';
+    $('p'+n+'led').className='led'+(s.on?' on':'');$('drv'+n).classList.toggle('on',s.on);
+    $('btnT'+n).classList.toggle('on',!!(HW.test&&HW.test.n===n));
+  }
+}
+
+// ===================== SCENE =====================
+const cv=$('scene'),cx=cv.getContext('2d');
+const SW=1200,SH=480,GY=292;
+const TK={A:{x:168,w:194},B:{x:838,w:194}},TY=330,TH=124;
+const PIPE={1:372,2:428},PX0=362,PX1=838,PUMPX=600;
+const CITYX={A:[18,520],B:[680,1182]};
+let parts,lastLogKey='',beam=0,lastTickSeen=null,impeller={1:0,2:0},realTime=0;
+function rng(s){return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+function genBuildings(x0,x1,seed,minH,varH){const r=rng(seed),b=[];let x=x0;while(x<x1-20){const w=Math.min(24+r()*36,x1-x);const h=minH+r()*varH;const cols=Math.max(1,Math.floor((w-6)/8)),rows=Math.max(1,Math.floor((h-12)/11));const lit=[];for(let i=0;i<cols*rows;i++)lit.push(r());b.push({x,w,h,cols,rows,lit,tone:r(),roof:r()});x+=w+3+r()*7;}return b;}
+const BLD={A:genBuildings(186,505,7,60,150),B:genBuildings(690,1170,21,45,120)};
+const HOUSES=[{x:700,w:46},{x:1110,w:50}];
+const STARS=(()=>{const r=rng(3),s=[];for(let i=0;i<70;i++)s.push([r()*SW,r()*200,r()]);return s;})();
+const CLOUDS=(()=>{const r=rng(17),s=[];for(let i=0;i<9;i++)s.push({x:r()*SW,y:20+r()*110,s:0.7+r()*0.8,v:6+r()*10});return s;})();
+function lerp(a,b,t){return a+(b-a)*t;}
+function mix(c1,c2,t){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const a=p(c1),b=p(c2);return`rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],t))).join(',')})`;}
+function daylight(h){return clamp(Math.sin((h-6)/12*Math.PI)*1.6,0,1);}
+function rr(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath();}
+function co2Color(C){const p=W.p;return C>=p.danger?COL.red:C>=p.trigger?COL.amber:C>=p.target?'#e8d36a':COL.green;}
+
+function updateParticles(dt){
+  const p=W.p,sp=running?speed:0;
+  const chim=[{x:76,y:GY-138,c:'A'},{x:122,y:GY-120,c:'A'},{x:718,y:GY-62,c:'B'},{x:1130,y:GY-64,c:'B'}];
+  for(const ch of chim){const c=cityById(W,ch.c);let n=c.Etrue*1.3*sp*dt;while(n>0){if(Math.random()<n)parts.smoke.push({x:ch.x+(Math.random()-.5)*6,y:ch.y,vx:4+Math.random()*8,vy:-10-Math.random()*8,life:0,max:3+Math.random()*2.5,r:3+Math.random()*3,dark:c.Etrue>p.profiles[ch.c].base+p.profiles[ch.c].m+0.5});n-=1;}}
+  parts.smoke=parts.smoke.filter(s=>{s.life+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.r+=dt*5;return s.life<s.max;}).slice(-260);
+  for(const id of ['A','B']){const arr=parts['co2'+id],c=cityById(W,id),[x0,x1]=CITYX[id];const target=Math.round(clamp((c.C-p.bg)/6,0,120));
+    while(arr.length<target)arr.push({x:x0+Math.random()*(x1-x0),y:40+Math.random()*(GY-60),ph:Math.random()*6.28,s:.6+Math.random()*.8});
+    if(arr.length>target)arr.splice(0,Math.min(arr.length-target,Math.ceil(dt*30)));
+    for(const d of arr){d.ph+=dt*d.s;d.x+=Math.cos(d.ph)*6*dt*d.s;d.y+=Math.sin(d.ph*.7)*4*dt;}}
+  for(const id of ['A','B']){const c=cityById(W,id),t=TK[id];let n=c.absorbRate*3*sp*dt;while(n>0){if(Math.random()<n)parts.intake.push({id,x:t.x+t.w/2+(Math.random()-.5)*90,y:GY-50-Math.random()*40,tx:t.x+t.w/2,life:0});n-=1;}}
+  parts.intake=parts.intake.filter(q=>{q.life+=dt;const k=Math.min(1,dt*1.6);q.x+=(q.tx-q.x)*k;q.y+=(GY+28-q.y)*k*.9;return q.y<GY+24&&q.life<3;}).slice(-200);
+  if(W.pump&&running){const pm=W.pump,dir=pm.to==='A'?-1:1;let n=(10+pm.power*16)*dt*Math.min(speed,2);while(n>0){if(Math.random()<n)parts.flow.push({pipe:pm.pumpNo,x:dir<0?PX1:PX0,dir,v:(140+pm.power*160)*Math.min(speed,2),o:(Math.random()-.5)*8});n-=1;}}
+  parts.flow=parts.flow.filter(q=>{q.x+=q.dir*q.v*dt;return q.x>PX0-4&&q.x<PX1+4;});
+  for(const n of [1,2]){const s=pinState(n);if(s.on)impeller[n]+=dt*(6+s.pwm/255*14)*(W.pump&&W.pump.pumpNo===n?Math.min(speed,3):1);}
+  if(!parts.cars){parts.cars=[];const r=rng(9);for(let i=0;i<30;i++)parts.cars.push({id:i<15?'A':'B',x:r(),v:(r()<.5?-1:1)*(40+r()*40),col:['#d9dde0','#e07a5f','#81b29a','#f2cc8f','#6d9dc5'][Math.floor(r()*5)]});}
+  for(const car of parts.cars){const[x0,x1]=CITYX[car.id];car.x+=car.v*dt*(sp?1:0)/(x1-x0);if(car.x>1)car.x-=1;if(car.x<0)car.x+=1;}
+  for(const cl of CLOUDS){cl.x+=cl.v*dt*(sp?1:0.3);if(cl.x>SW+80)cl.x=-80;}
+  beam=Math.max(0,beam-dt*1.2);
+  if(W.ai.lastTick!==lastTickSeen){lastTickSeen=W.ai.lastTick;beam=1;stepAnimT=realTime;}
+}
+
+function drawScene(){
+  const p=W.p,h=hourOf(W.t),cl=cloudy(W),dl=daylight(h)*(cl?0.6:1),dusk=clamp(1-Math.abs(dl-0.35)*3,0,1)*(dl>0&&dl<0.9?1:0);
+  const s=cv.width/SW;cx.setTransform(s,0,0,s,0,0);
+  const g=cx.createLinearGradient(0,0,0,GY);g.addColorStop(0,mix('#050b18',cl?'#4f6170':'#2b6f9e',dl));g.addColorStop(1,mix('#0d1a30',cl?'#8d9aa3':'#a9d2e4',dl));cx.fillStyle=g;cx.fillRect(0,0,SW,GY);
+  if(dusk>0&&!cl){const dg=cx.createLinearGradient(0,GY-140,0,GY);dg.addColorStop(0,'rgba(255,140,80,0)');dg.addColorStop(1,`rgba(255,140,80,${0.35*dusk})`);cx.fillStyle=dg;cx.fillRect(0,GY-140,SW,140);}
+  if(dl<0.6&&!cl){for(const[x,y,b]of STARS){cx.fillStyle=`rgba(255,255,255,${(0.6-dl)*(.4+b*.6)})`;cx.fillRect(x,y,1.4,1.4);}}
+  const ang=(h-6)/12*Math.PI;if(h>=5.5&&h<=18.5){const sx=SW/2-Math.cos(ang)*560,sy=GY-Math.sin(ang)*240;const sg=cx.createRadialGradient(sx,sy,2,sx,sy,40);sg.addColorStop(0,'#fff6d0');sg.addColorStop(.35,'#ffd36e');sg.addColorStop(1,'rgba(255,200,90,0)');cx.globalAlpha=cl?0.4:1;cx.fillStyle=sg;cx.beginPath();cx.arc(sx,sy,40,0,7);cx.fill();cx.globalAlpha=1;}
+  else{const a2=((h+6)%24-6)/12*Math.PI;const mx=SW/2-Math.cos(a2)*520,my=GY-Math.sin(a2)*210;cx.fillStyle='#dfe8f0';cx.beginPath();cx.arc(mx,my,11,0,7);cx.fill();cx.fillStyle=mix('#050b18','#1a4a70',dl);cx.beginPath();cx.arc(mx+5,my-3,10,0,7);cx.fill();}
+  if(cl){for(const c of CLOUDS){cx.fillStyle=`rgba(${dl>0.3?'190,198,205':'70,80,92'},.85)`;for(const[dx,dy,r]of [[0,0,26],[24,-8,22],[48,0,24],[22,8,22]]){cx.beginPath();cx.arc(c.x+dx*c.s,c.y+dy*c.s,r*c.s,0,7);cx.fill();}}}
+  if(hot(W)){cx.fillStyle='rgba(255,110,40,.10)';cx.fillRect(0,0,SW,GY);}
+  for(const id of ['A','B'])drawSmog(id,0.55);
+  drawCityA(dl);drawCityB(dl);drawSolar(dl);drawHub();
+  for(const id of ['A','B'])drawSmog(id,0.45);
+  for(const id of ['A','B']){for(const d of parts['co2'+id]){cx.fillStyle='rgba(190,180,160,.55)';cx.beginPath();cx.arc(d.x,d.y,1.8,0,7);cx.fill();}}
+  for(const sm of parts.smoke){const a=(1-sm.life/sm.max)*.5;cx.fillStyle=sm.dark?`rgba(70,62,55,${a})`:`rgba(170,165,155,${a})`;cx.beginPath();cx.arc(sm.x,sm.y,sm.r,0,7);cx.fill();}
+  cx.fillStyle='#141c22';cx.fillRect(0,GY-6,SW,10);cx.fillStyle='#2a3a44';for(let x=0;x<SW;x+=34)cx.fillRect(x,GY-1.5,16,1.5);
+  for(const id of ['A','B']){const nVis=Math.round(emissionTrue(p.profiles[id],W.t)*1.6);const list=parts.cars.filter(c=>c.id===id).slice(0,clamp(nVis,0,15));const[x0,x1]=CITYX[id];
+    for(const car of list){const x=x0+car.x*(x1-x0),y=car.v>0?GY-5:GY-1;cx.fillStyle=car.col;rr(x,y,13,5,2);cx.fill();if(dl<.4){cx.fillStyle='rgba(255,240,180,.8)';cx.fillRect(car.v>0?x+13:x-3,y+1,3,2);}}}
+  const ug=cx.createLinearGradient(0,GY+4,0,SH);ug.addColorStop(0,'#0b1712');ug.addColorStop(1,'#050c0b');cx.fillStyle=ug;cx.fillRect(0,GY+4,SW,SH-GY);
+  cx.strokeStyle='rgba(61,220,151,.05)';cx.lineWidth=1;for(let x=0;x<SW;x+=24){cx.beginPath();cx.moveTo(x,GY+4);cx.lineTo(x,SH);cx.stroke();}
+  cx.fillStyle='rgba(142,168,181,.55)';cx.font='600 10px Segoe UI';cx.textAlign='center';cx.fillText('UNDERGROUND ALGAE NETWORK',PUMPX,SH-8);cx.textAlign='left';
+  for(const id of ['A','B']){const t=TK[id],x=t.x+t.w/2;cx.fillStyle='#22313a';cx.fillRect(x-9,GY-4,18,TY-GY+4);cx.fillStyle='#3a4d58';cx.fillRect(x-14,GY-8,28,5);}
+  for(const q of parts.intake){cx.fillStyle='rgba(200,190,170,.75)';cx.beginPath();cx.arc(q.x,q.y,1.8,0,7);cx.fill();}
+  drawPipes();
+  for(const id of ['A','B'])drawTank(id);
+  cx.strokeStyle=(W.pump||HW.test)?'rgba(61,220,151,.5)':'rgba(120,150,165,.25)';cx.setLineDash([3,4]);cx.lineWidth=1.5;cx.beginPath();cx.moveTo(PUMPX,GY);cx.lineTo(PUMPX,PIPE[1]-24);cx.stroke();cx.setLineDash([]);
+  drawRoute();
+  drawBeams();
+  for(const id of ['A','B'])drawReadout(id);
+  // weather badges
+  const wx=[];if(cl)wx.push(`🌥 CLOUDY · ${f((W.env.cloudEnd-W.t)/60,1)} h left`);if(hot(W))wx.push(`🌡 HEAT WAVE · ${f((W.env.heatEnd-W.t)/60,1)} h left`);
+  if(wx.length){cx.font='700 11px Segoe UI';const t=wx.join('   ');const tw=cx.measureText(t).width+20;cx.fillStyle='rgba(6,14,20,.8)';rr(PUMPX-tw/2,GY-276+60,tw,20,10);cx.fill();cx.fillStyle='#ffd58a';cx.textAlign='center';cx.fillText(t,PUMPX,GY-276+74);cx.textAlign='left';}
+}
+function drawSmog(id,k){
+  const c=cityById(W,id),[x0,x1]=CITYX[id],a=clamp((c.C-460)/620,0,0.75)*k;if(a<=0)return;
+  const g=cx.createLinearGradient(0,30,0,GY);g.addColorStop(0,`rgba(120,110,90,0)`);g.addColorStop(.45,`rgba(125,112,88,${a*.6})`);g.addColorStop(1,`rgba(110,98,78,${a})`);
+  cx.fillStyle=g;cx.beginPath();cx.moveTo(x0-10,GY);cx.bezierCurveTo(x0,120,x0+90,60,(x0+x1)/2,70);cx.bezierCurveTo(x1-90,60,x1,120,x1+10,GY);cx.closePath();cx.fill();
+}
+function drawBuilding(b,dl,tint){
+  const y=GY-b.h;const base=mix(tint[0],tint[1],b.tone);
+  const g=cx.createLinearGradient(b.x,y,b.x+b.w,y);g.addColorStop(0,base);g.addColorStop(1,mix('#0a1118',tint[0],.6));
+  cx.fillStyle=g;cx.fillRect(b.x,y,b.w,b.h);
+  if(b.roof>.7){cx.fillStyle='#2b3a44';cx.fillRect(b.x+b.w/2-1,y-10,2,10);cx.fillStyle=Math.sin(realTime*3+b.x)>0?'#ff5f5f':'#5a1d1d';cx.fillRect(b.x+b.w/2-1.5,y-12,3,3);}
+  for(let r=0;r<b.rows;r++)for(let c=0;c<b.cols;c++){const L=b.lit[r*b.cols+c];const wx=b.x+4+c*8,wy=y+6+r*11;
+    cx.fillStyle=dl<.5?(L<(.55-dl*.6)?`rgba(255,214,140,${.55+L*.4})`:'rgba(20,30,40,.9)'):`rgba(170,210,235,${.12+L*.18})`;cx.fillRect(wx,wy,4,6);}
+}
+function drawCityA(dl){
+  for(const b of BLD.A)drawBuilding(b,dl,['#24323d','#33434f']);
+  cx.fillStyle='#2a2f35';cx.fillRect(66,GY-138,20,138);cx.fillRect(114,GY-120,16,120);
+  cx.fillStyle='#b04a3a';cx.fillRect(66,GY-130,20,5);cx.fillRect(114,GY-112,16,5);
+  cx.fillStyle='#323b44';cx.beginPath();cx.moveTo(30,GY);cx.lineTo(30,GY-56);for(let i=0;i<5;i++){cx.lineTo(30+i*30+30,GY-80);cx.lineTo(30+i*30+30,GY-56);}cx.lineTo(180,GY);cx.closePath();cx.fill();
+  cx.fillStyle=dl<.5?'rgba(255,200,120,.5)':'rgba(170,210,235,.2)';for(let i=0;i<5;i++)cx.fillRect(38+i*30,GY-44,18,10);
+  cx.fillStyle='rgba(231,242,246,.8)';cx.font='600 10px Segoe UI';cx.fillText('FACTORY',80,GY-14);
+}
+function drawCityB(dl){
+  for(const b of BLD.B)drawBuilding(b,dl,['#1f3040','#2b4156']);
+  for(const hs of HOUSES){cx.fillStyle='#3c4b57';cx.fillRect(hs.x,GY-34,hs.w,34);cx.fillStyle='#7a3f35';cx.beginPath();cx.moveTo(hs.x-4,GY-34);cx.lineTo(hs.x+hs.w/2,GY-56);cx.lineTo(hs.x+hs.w+4,GY-34);cx.fill();cx.fillStyle='#2a2f35';cx.fillRect(hs.x+hs.w-16,GY-64,8,18);cx.fillStyle=dl<.5?'rgba(255,214,140,.8)':'rgba(170,210,235,.3)';cx.fillRect(hs.x+8,GY-24,9,9);cx.fillRect(hs.x+hs.w-18,GY-24,9,9);}
+  const r=rng(5);for(let i=0;i<9;i++){const x=760+i*44+r()*16,s=10+r()*7;cx.fillStyle='#2b2118';cx.fillRect(x-1.5,GY-12,3,12);cx.fillStyle=mix('#163a2a','#2d6b48',dl);cx.beginPath();cx.arc(x,GY-14-s*.5,s,0,7);cx.fill();}
+}
+function drawSolar(){
+  const e=W.energy,k=clamp(e.solarW/W.p.solarPeakW,0,1);
+  for(const x0 of [522,646]){
+    cx.fillStyle='#2b3a44';cx.fillRect(x0+14,GY-16,3,12);
+    cx.save();cx.translate(x0,GY-18);cx.transform(1,0,-0.35,1,0,0);
+    cx.fillStyle=mix('#0f2340','#2f6fb3',k);cx.fillRect(0,-14,34,14);cx.strokeStyle='rgba(200,230,255,.35)';cx.lineWidth=0.8;
+    for(let i=1;i<4;i++){cx.beginPath();cx.moveTo(i*8.5,-14);cx.lineTo(i*8.5,0);cx.stroke();}cx.beginPath();cx.moveTo(0,-7);cx.lineTo(34,-7);cx.stroke();cx.restore();
+  }
+  cx.fillStyle='rgba(255,213,138,.85)';cx.font='700 9px Consolas,monospace';cx.textAlign='center';cx.fillText(`SOLAR ${f(e.solarW,0)} W`,PUMPX,GY-2+0);cx.textAlign='left';
+}
+function modeColor(m){return{MONITORING:COL.green,ARMED:COL.purple,PUMPING:'#7dffb9',SETTLING:COL.amber,CRITICAL:COL.red}[m]||COL.green;}
+function drawHub(){
+  const m=W.ai.mode,mc=modeColor(m),bp=W.energy.batt/W.p.batteryWh;
+  cx.fillStyle='#1b2a33';cx.beginPath();cx.moveTo(566,GY-10);cx.lineTo(574,GY-120);cx.lineTo(626,GY-120);cx.lineTo(634,GY-10);cx.fill();
+  cx.fillStyle='#24363f';cx.fillRect(560,GY-128,80,10);
+  cx.strokeStyle='#3a4d58';cx.lineWidth=2;cx.beginPath();cx.moveTo(PUMPX,GY-128);cx.lineTo(PUMPX,GY-196);cx.stroke();
+  // battery gauge on tower
+  cx.strokeStyle='#5b7380';cx.lineWidth=1.5;cx.strokeRect(588,GY-96,24,60);cx.fillStyle='#5b7380';cx.fillRect(595,GY-100,10,4);
+  const bc=bp<=W.p.lowBatteryPct/100?COL.red:bp<0.4?COL.amber:COL.green;cx.fillStyle=bc;cx.fillRect(590,GY-38-56*bp,20,56*bp);
+  cx.fillStyle='#e7f2f6';cx.font='700 9px Consolas,monospace';cx.textAlign='center';cx.fillText(`${Math.round(bp*100)}%`,PUMPX,GY-22);cx.fillText('BATT',PUMPX,GY-100-4);
+  const cy=GY-158;const pulse=m==='CRITICAL'?.5+.5*Math.sin(realTime*8):1;
+  const gg=cx.createRadialGradient(PUMPX,cy,4,PUMPX,cy,46);gg.addColorStop(0,mc);gg.addColorStop(1,'rgba(0,0,0,0)');cx.globalAlpha=.35*pulse+.15*beam;cx.fillStyle=gg;cx.beginPath();cx.arc(PUMPX,cy,46,0,7);cx.fill();cx.globalAlpha=1;
+  cx.fillStyle='#0a161d';cx.beginPath();cx.arc(PUMPX,cy,22,0,7);cx.fill();
+  cx.strokeStyle=mc;cx.lineWidth=2.5;for(let i=0;i<3;i++){const a0=realTime*(m==='PUMPING'?2.6:1)+i*2.094;cx.beginPath();cx.arc(PUMPX,cy,18,a0,a0+1.3);cx.stroke();}
+  cx.fillStyle=mc;cx.beginPath();cx.arc(PUMPX,cy,6,0,7);cx.fill();
+  cx.fillStyle='#e7f2f6';cx.font='700 11px Segoe UI';cx.fillText('MIRAGE AI',PUMPX,cy-30);
+  cx.font='700 9.5px Consolas,monospace';const lbl={MONITORING:W.ai.hold?'HOLD':'MONITORING',ARMED:'PRE-PUMP ARMED',PUMPING:'PUMPING',SETTLING:'SETTLING',CRITICAL:'CRITICAL'}[m];
+  const lw=cx.measureText(lbl).width+14;cx.fillStyle='rgba(6,14,20,.9)';rr(PUMPX-lw/2,GY-127,lw,15,7);cx.fill();cx.strokeStyle=mc;cx.lineWidth=1;rr(PUMPX-lw/2,GY-127,lw,15,7);cx.stroke();
+  cx.fillStyle=mc;cx.fillText(lbl,PUMPX,GY-116);cx.textAlign='left';
+}
+function drawBeams(){
+  if(beam<=0)return;const cy=GY-158;
+  for(const id of ['A','B']){const tx=id==='A'?265:935;cx.strokeStyle=`rgba(60,200,245,${beam*.55})`;cx.lineWidth=1.2;cx.setLineDash([5,5]);cx.lineDashOffset=-realTime*30;cx.beginPath();cx.moveTo(PUMPX,cy);cx.quadraticCurveTo((PUMPX+tx)/2,cy-90,tx,58);cx.stroke();}
+  cx.setLineDash([]);
+}
+function drawReadout(id){
+  const c=cityById(W,id),x=id==='A'?265:935,faulty=c.aiStatus&&c.aiStatus!=='ok',val=faulty?c.obsC:c.C,col=faulty?COL.amber:co2Color(c.C),w=220;
+  cx.fillStyle='rgba(6,14,20,.82)';rr(x-w/2,12,w,46,10);cx.fill();cx.strokeStyle=col;cx.lineWidth=1.3;if(faulty)cx.setLineDash([4,3]);rr(x-w/2,12,w,46,10);cx.stroke();cx.setLineDash([]);
+  cx.fillStyle=COL[id];cx.font='700 11px Segoe UI';cx.fillText(`CITY ${id}`,x-w/2+12,29);
+  const ev=c.eventEnd>W.t||c.holding;
+  cx.font='700 9.5px Segoe UI';if(faulty){cx.fillStyle=COL.amber;cx.fillText(`⚠ SENSOR ${c.aiStatus.toUpperCase()} · ESTIMATE`,x+w/2-138,29);}
+  else if(ev){cx.fillStyle='#ffcf9a';cx.fillText('☁ POLLUTION EVENT',x+w/2-112,29);}
+  cx.fillStyle=col;cx.font='700 19px Consolas,monospace';cx.fillText(`CO₂ ${f(val,0)}${faulty?'*':''} ppm`,x-w/2+12,50);
+  const tr=trendOf(id);cx.font='700 12px Consolas,monospace';cx.fillStyle=tr>0.3?COL.amber:tr<-0.3?COL.green:COL.muted;cx.fillText(tr>0.3?'▲':tr<-0.3?'▼':'▶',x+w/2-22,50);
+}
+function drawPipes(){
+  const pm=W.pump,sch=W.ai.mode==='ARMED'?W.ai.scheduled:null;
+  for(const n of [1,2]){const y=PIPE[n],active=pm&&pm.pumpNo===n,sched=sch&&sch.pumpNo===n;
+    cx.lineCap='round';
+    if(active){cx.strokeStyle='rgba(61,220,151,.25)';cx.lineWidth=22;cx.beginPath();cx.moveTo(PX0,y);cx.lineTo(PX1,y);cx.stroke();}
+    cx.strokeStyle='#1e3441';cx.lineWidth=13;cx.beginPath();cx.moveTo(PX0,y);cx.lineTo(PX1,y);cx.stroke();
+    cx.strokeStyle=active?'#1d6b4b':'#0e1d25';cx.lineWidth=8;cx.beginPath();cx.moveTo(PX0,y);cx.lineTo(PX1,y);cx.stroke();
+    if(sched){cx.strokeStyle=COL.purple;cx.lineWidth=2;cx.setLineDash([8,6]);cx.lineDashOffset=-realTime*20;cx.beginPath();cx.moveTo(PX0,y-10);cx.lineTo(PX1,y-10);cx.stroke();cx.setLineDash([]);}
+    const dir=n===1?-1:1;cx.fillStyle=active?'rgba(125,255,185,.8)':'rgba(120,150,165,.35)';
+    for(let x=PX0+40;x<PX1-30;x+=60){if(Math.abs(x-PUMPX)<40)continue;cx.beginPath();cx.moveTo(x+dir*5,y);cx.lineTo(x-dir*3,y-4);cx.lineTo(x-dir*3,y+4);cx.fill();}
+    cx.lineCap='butt';
+  }
+  for(const q of parts.flow){const y=PIPE[q.pipe]+q.o*.4;const gr=cx.createRadialGradient(q.x,y,0,q.x,y,6);gr.addColorStop(0,'rgba(140,255,190,1)');gr.addColorStop(1,'rgba(61,220,151,0)');cx.fillStyle=gr;cx.beginPath();cx.arc(q.x,y,6,0,7);cx.fill();}
+  for(const n of [1,2]){const y=PIPE[n],s=pinState(n),active=s.on,isTest=active&&!(pm&&pm.pumpNo===n);
+    cx.fillStyle='#13232c';cx.beginPath();cx.arc(PUMPX,y,19,0,7);cx.fill();cx.strokeStyle=active?COL.green:'#35505d';cx.lineWidth=2.5;cx.stroke();
+    cx.save();cx.translate(PUMPX,y);cx.rotate(impeller[n]);cx.strokeStyle=active?'#7dffb9':'#4a6370';cx.lineWidth=2.5;for(let i=0;i<4;i++){cx.rotate(Math.PI/2);cx.beginPath();cx.moveTo(0,0);cx.quadraticCurveTo(6,-4,11,-2);cx.stroke();}cx.restore();
+    const lx=PUMPX+30,ly=y-10;cx.fillStyle=active?'#3ddc97':'#16302a';if(active){cx.shadowColor='#3ddc97';cx.shadowBlur=14;}cx.beginPath();cx.arc(lx,ly,4.5,0,7);cx.fill();cx.shadowBlur=0;
+    cx.fillStyle=active?'#cfffe6':'rgba(142,168,181,.8)';cx.font='700 10px Consolas,monospace';cx.textAlign='center';cx.fillText(n===1?'PUMP 1 · B → A':'PUMP 2 · A → B',PUMPX,n===1?y-26:y+33);cx.textAlign='left';
+    if(active&&!isTest){cx.fillStyle='#7dffb9';cx.font='700 10px Consolas,monospace';cx.fillText(`${f(pm.moved)}/${f(pm.L)} L`,lx+10,ly+4);}
+    if(isTest){cx.fillStyle=COL.cyan;cx.font='700 10px Consolas,monospace';cx.fillText('TEST',lx+10,ly+4);}
+  }
+}
+function drawRoute(){
+  const pm=W.pump,sch=W.ai.mode==='ARMED'?W.ai.scheduled:null,r=pm||sch;if(!r)return;
+  const txt=`DONOR ${r.from}  ━━▶  RECEIVER ${r.to}`,col=pm?'#7dffb9':COL.purple,y=314;
+  cx.font='700 12px Consolas,monospace';const tw=cx.measureText(txt).width+22+(sch?70:0);
+  cx.fillStyle='rgba(6,14,20,.85)';rr(PUMPX-tw/2,y-14,tw,20,10);cx.fill();cx.strokeStyle=col;cx.lineWidth=1.2;rr(PUMPX-tw/2,y-14,tw,20,10);cx.stroke();
+  cx.fillStyle=col;cx.textAlign='center';cx.fillText(sch?`${txt}  @ ${hhmm(sch.actAt)}`:txt,PUMPX,y);cx.textAlign='left';
+}
+function drawTank(id){
+  const c=cityById(W,id),t=TK[id],p=W.p,x=t.x,w=t.w,y=TY,h=TH;
+  const role=W.pump?(W.pump.to===id?'recv':W.pump.from===id?'don':''):'';
+  cx.fillStyle='rgba(12,30,36,.9)';rr(x,y,w,h,10);cx.fill();
+  const lev=clamp(c.S/p.cap,0,1),fy=y+h-lev*(h-6)-3;
+  cx.save();rr(x+3,y+3,w-6,h-6,8);cx.clip();
+  const hl=c.sens?c.sens.health:1;
+  const g=cx.createLinearGradient(0,fy,0,y+h);g.addColorStop(0,mix('#8a8f3a','#3fcf7f',hl));g.addColorStop(1,mix('#3d3f1a','#0f5a35',hl));cx.fillStyle=g;
+  cx.beginPath();cx.moveTo(x,y+h);for(let i=0;i<=w;i+=6)cx.lineTo(x+i,fy+Math.sin(i*.06+realTime*2)*1.6);cx.lineTo(x+w,y+h);cx.closePath();cx.fill();
+  const r=rng(id==='A'?11:13);for(let i=0;i<26;i++){const px=x+8+r()*(w-16),py=fy+6+r()*(y+h-fy-10);if(py>fy+3){cx.fillStyle='rgba(180,255,200,.18)';cx.beginPath();cx.arc(px,py,1.5+r()*2,0,7);cx.fill();}}
+  if(c.lightOn){const pg=cx.createRadialGradient(x+w/2,y,4,x+w/2,y+h/2,w*.7);pg.addColorStop(0,'rgba(255,122,217,.45)');pg.addColorStop(1,'rgba(255,122,217,0)');cx.fillStyle=pg;cx.fillRect(x,y,w,h);}
+  cx.restore();
+  if(c.lightOn){cx.fillStyle=COL.pink;cx.shadowColor=COL.pink;cx.shadowBlur=12;for(let i=0;i<4;i++)cx.fillRect(x+24+i*44,y-4,22,4);cx.shadowBlur=0;}
+  cx.strokeStyle=role==='recv'?COL.green:role==='don'?COL.amber:'rgba(150,200,215,.45)';cx.lineWidth=role?2.5:1.5;rr(x,y,w,h,10);cx.stroke();
+  const ry=y+h-(p.reservePct/100)*(h-6)-3;cx.strokeStyle=COL.amber;cx.lineWidth=2;cx.beginPath();cx.moveTo(x-6,ry);cx.lineTo(x+22,ry);cx.stroke();
+  cx.fillStyle=COL.amber;cx.font='600 9px Segoe UI';cx.fillText('reserve',x-6,ry+11);
+  if(c.fc){const ny=y+h-clamp(c.fc.need/p.cap,0,1)*(h-6)-3;cx.strokeStyle=COL.cyan;cx.setLineDash([6,4]);cx.lineWidth=1.6;cx.beginPath();cx.moveTo(x+4,ny);cx.lineTo(x+w-4,ny);cx.stroke();cx.setLineDash([]);
+    cx.fillStyle=COL.cyan;cx.font='600 9.5px Segoe UI';cx.textAlign='right';cx.fillText(`need ${f(c.fc.need,0)} L`,x+w-6,ny-4);cx.textAlign='left';}
+  cx.fillStyle='#fff';cx.font='700 15px Consolas,monospace';cx.textAlign='center';cx.fillText(`${f(c.S)} L`,x+w/2,y+h/2+6);
+  cx.fillStyle='rgba(231,242,246,.75)';cx.font='600 9.5px Segoe UI';cx.fillText(`ALGAE TANK ${id} · ${p.cap} L · health ${pct(hl)}`,x+w/2,y+h+13);cx.textAlign='left';
+  if(role){cx.fillStyle=role==='recv'?COL.green:COL.amber;cx.font='700 11px Consolas,monospace';cx.textAlign='center';cx.fillText(role==='recv'?'▲ RECEIVER':'▼ DONOR',x+w/2,y+20);cx.textAlign='left';}
+}
+function trendOf(id){const H=W.hist;if(H.length<6)return 0;const a=H[H.length-1],b=H[H.length-6];return(a['C'+id]-b['C'+id])/(a.t-b.t);}
+
+// ===================== CHARTS =====================
+function prep(c){const r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;const w=Math.max(10,r.width),h=Math.max(10,r.height);if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d);}const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);return{x,w,h};}
+function line(x,pts,col,wd,dash){if(pts.length<2)return;x.strokeStyle=col;x.lineWidth=wd;x.setLineDash(dash||[]);x.beginPath();pts.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.stroke();x.setLineDash([]);}
+function drawCityChart(id){
+  const c=cityById(W,id),{x,w,h}=prep($('chart'+id)),p=W.p;
+  const L=34,R=30,T=8,B=16,t1=W.t,t0=t1-360,t2=t1+(p.predictive?p.horizonH*60:60);
+  const H=W.hist.filter(q=>q.t>=t0);let ymax=Math.max(p.danger+60,...H.map(q=>q['C'+id]),...(showGhost?H.map(q=>q['g'+id]):[]),...(c.fc&&c.fc.path?c.fc.path.map(q=>q.C):[]));ymax=Math.ceil((ymax+20)/100)*100;const ymin=Math.floor(Math.min(p.bg,...H.map(q=>q['C'+id]))/100)*100;
+  const X=t=>L+(t-t0)/(t2-t0)*(w-L-R),Y=v=>T+(1-(v-ymin)/(ymax-ymin))*(h-T-B),YS=s=>T+(1-s/p.cap)*(h-T-B);
+  x.font='10px Consolas,monospace';x.fillStyle=COL.dim;x.strokeStyle=COL.grid;x.lineWidth=1;
+  for(let v=ymin;v<=ymax;v+=100){x.beginPath();x.moveTo(L,Y(v));x.lineTo(w-R,Y(v));x.stroke();x.fillText(v,2,Y(v)+3);}
+  for(let t=Math.ceil(t0/60)*60;t<=t2;t+=60){const xx=X(t);if(xx<L)continue;x.beginPath();x.moveTo(xx,T);x.lineTo(xx,h-B);x.stroke();if((t/60)%2===0)x.fillText(hhmm(t).slice(0,2)+'h',xx-8,h-3);}
+  x.fillStyle='rgba(61,220,151,.6)';x.fillText(p.cap+'L',w-R+3,T+8);x.fillText('0L',w-R+3,h-B);
+  for(const tr of W.transfers){if((tr.end??t1)<t0||tr.t>t1)continue;x.fillStyle=tr.to===id?'rgba(61,220,151,.12)':'rgba(246,180,74,.10)';x.fillRect(X(Math.max(tr.t,t0)),T,X(tr.end??t1)-X(Math.max(tr.t,t0)),h-T-B);}
+  line(x,[[L,Y(p.target)],[w-R,Y(p.target)]],'rgba(61,220,151,.7)',1,[4,4]);
+  line(x,[[L,Y(p.trigger)],[w-R,Y(p.trigger)]],'rgba(246,180,74,.45)',1,[2,3]);
+  line(x,[[L,Y(p.danger)],[w-R,Y(p.danger)]],'rgba(255,95,95,.75)',1,[4,4]);
+  line(x,H.map(q=>[X(q.t),YS(q['S'+id])]),'rgba(61,220,151,.55)',1.5);
+  if(showGhost)line(x,H.map(q=>[X(q.t),Y(q['g'+id])]),'#7c8f99',1.3,[4,3]);
+  line(x,H.map(q=>[X(q.t),Y(q['C'+id])]),COL[id],2.2);
+  if(p.predictive&&c.fc&&c.fc.path)line(x,c.fc.path.map(q=>[X(q.t),Y(q.C)]),COL.amber,1.8,[5,4]);
+  const s=W.ai.mode==='ARMED'&&W.ai.scheduled&&W.ai.scheduled.to===id?W.ai.scheduled:null;
+  if(s){line(x,[[X(s.actAt),T],[X(s.actAt),h-B]],COL.purple,1.5,[3,3]);x.fillStyle=COL.purple;x.fillText('pre-pump',X(s.actAt)+3,T+20);}
+  for(const tr of W.transfers){if(tr.t<t0||tr.t>t1)continue;const xx=X(tr.t);x.fillStyle=tr.to===id?COL.green:COL.amber;x.font='11px Segoe UI';x.fillText(tr.to===id?'▲':'▼',xx-4,h-B-3);}
+  line(x,[[X(t1),T],[X(t1),h-B]],'rgba(231,242,246,.5)',1);
+  x.font='10px Segoe UI';x.fillStyle='rgba(231,242,246,.6)';x.fillText(p.predictive?'now │ forecast →':'now (prediction off)',X(t1)+4,T+9);
+}
+function drawPattern(id){
+  const c=cityById(W,id),{x,w,h}=prep($('pat'+id)),p=W.p,hn=Math.floor(hourOf(W.t));
+  const truth=[];for(let k=0;k<24;k++){let s=0;for(let m=0;m<60;m+=5)s+=emissionTrue(p.profiles[id],k*60+m+2.5);truth.push(s/12);}
+  const mx=Math.max(1,...truth,...c.profile.filter(v=>v!=null))*1.12,bw=(w-24)/24;
+  for(let k=0;k<24;k++){const bx=20+k*bw,v=c.profile[k];
+    if(v!=null){const bh=v/mx*(h-14);x.fillStyle=k===hn?COL[id]:'rgba(223,233,238,.55)';x.fillRect(bx+1,h-12-bh,bw-2,bh);}
+    else{x.strokeStyle='rgba(142,168,181,.25)';x.strokeRect(bx+1.5,h-13,bw-3,1);}
+    const ty=h-12-truth[k]/mx*(h-14);x.fillStyle='#8ea8b5';x.fillRect(bx+1,ty-1,bw-2,2);
+    if(k%6===0){x.fillStyle=COL.dim;x.font='9px Consolas,monospace';x.fillText(String(k).padStart(2,'0'),bx,h-2);}
+  }
+  x.fillStyle=COL.dim;x.font='9px Consolas,monospace';x.fillText(f(mx,0),0,9);
+}
+function drawTimeline(){
+  const {x,w,h}=prep($('timeline')),p=W.p,t1=W.t,t0=t1-1440,H=W.hist.filter(q=>q.t>=t0);
+  const L=40,R=10,T=8,mid=h*0.6,B=16;
+  const X=t=>L+(t-t0)/(t1-t0)*(w-L-R);
+  let ymax=Math.max(p.danger+50,...H.map(q=>Math.max(q.CA,q.CB,showGhost?Math.max(q.gA,q.gB):0)));ymax=Math.ceil(ymax/100)*100;const ymin=Math.floor(Math.min(p.bg,...H.map(q=>Math.min(q.CA,q.CB)))/100)*100;
+  const Y=v=>T+(1-(v-ymin)/(ymax-ymin))*(mid-T-6),YS=s=>mid+14+(1-s/p.cap)*(h-B-mid-14);
+  x.font='10px Consolas,monospace';x.strokeStyle=COL.grid;x.fillStyle=COL.dim;x.lineWidth=1;
+  for(let v=ymin;v<=ymax;v+=100){x.beginPath();x.moveTo(L,Y(v));x.lineTo(w-R,Y(v));x.stroke();x.fillText(v,4,Y(v)+3);}
+  for(const s of [0,50,100]){const v=s*p.cap/100;x.beginPath();x.moveTo(L,YS(v));x.lineTo(w-R,YS(v));x.stroke();x.fillText(f(v,0)+'L',4,YS(v)+3);}
+  for(let t=Math.ceil(t0/180)*180;t<=t1;t+=180){const xx=X(t);x.beginPath();x.moveTo(xx,T);x.lineTo(xx,h-B);x.stroke();x.fillText(hhmm(t),xx-14,h-3);}
+  for(const tr of W.transfers){const e=tr.end??t1;if(e<t0)continue;x.fillStyle=tr.pumpNo===1?'rgba(61,220,151,.16)':'rgba(60,200,245,.16)';const a=X(Math.max(t0,tr.t));x.fillRect(a,T,Math.max(2,X(e)-a),h-B-T);x.fillStyle=COL.green;x.font='9px Consolas,monospace';x.fillText(tr.from+'→'+tr.to,a+1,T+9);}
+  line(x,[[L,Y(p.target)],[w-R,Y(p.target)]],'rgba(61,220,151,.6)',1,[4,4]);line(x,[[L,Y(p.danger)],[w-R,Y(p.danger)]],'rgba(255,95,95,.7)',1,[4,4]);
+  if(showGhost){line(x,H.map(q=>[X(q.t),Y(q.gA)]),'rgba(255,138,92,.45)',1.2,[4,3]);line(x,H.map(q=>[X(q.t),Y(q.gB)]),'rgba(92,184,255,.45)',1.2,[4,3]);}
+  line(x,H.map(q=>[X(q.t),Y(q.CA)]),COL.A,2);line(x,H.map(q=>[X(q.t),Y(q.CB)]),COL.B,2);
+  line(x,H.map(q=>[X(q.t),YS(q.SA)]),COL.A,2);line(x,H.map(q=>[X(q.t),YS(q.SB)]),COL.B,2);
+  line(x,[[L,YS(p.reservePct/100*p.cap)],[w-R,YS(p.reservePct/100*p.cap)]],'rgba(246,180,74,.6)',1,[3,3]);
+  x.fillStyle=COL.muted;x.font='600 10px Segoe UI';x.fillText('CO₂ (ppm)',L+4,T+10);x.fillText('Algae stock (L) · amber = reserve',L+4,mid+12);
+}
+
+// ===================== PANELS =====================
+const BADGE={MONITORING:'BALANCED · MONITORING',ARMED:'ARMED · PRE-PUMP SCHEDULED',PUMPING:'PUMPING',SETTLING:'SETTLING · MIXING',CRITICAL:'CRITICAL · NO SURPLUS ALGAE'};
+let stepAnimT=-10;
+function setText(id,v){const e=$(id);if(e&&e.textContent!==v)e.textContent=v;}
+function setRole(id,cls,ic,title,sub){const e=$('role'+id);e.className='role '+cls;const html=`<span class="ic">${ic}</span><div><b>${title}</b><span>${sub}</span></div>`;if(e.innerHTML!==html)e.innerHTML=html;$('card'+id).className='card city'+(['recv','don','sched','need'].includes(cls)?' role-'+cls:'');}
+function svCls(id,cls){const e=$(id);const c='sv'+(cls?' '+cls:'');if(e.className!==c)e.className=c;}
+function updatePanels(){
+  const p=W.p,ai=W.ai,m=ai.mode,mk=m==='MONITORING'&&ai.hold?'HOLD':m;
+  setText('clock',dayClock(W.t));
+  $('badge').className='badge m-'+mk;setText('badgeTxt',mk==='HOLD'?'MONITORING · HOLDING':BADGE[m]);
+  const realLeft=Math.max(0,(ai.nextTick-W.t)/SIM_PER_REAL_S/speed);setText('nextCheck',running?`next AI check in ${f(realLeft,1)} s`:'paused');
+  const d=ai.decision;
+  if(d){setText('headline',d.headline);$('why').className='why '+mk;setText('why',d.plain);setText('numbers',d.numbers.join('\n')||'—');}
+  const pm=W.pump,sc=m==='ARMED'?ai.scheduled:null,plan=pm||sc;
+  const last=W.transfers[W.transfers.length-1];
+  if(plan){
+    setText('tWhen',pm?'NOW':hhmm(sc.actAt));setText('tWhenS',pm?`started ${hhmm(pm.start)}`:`in ${f(sc.actAt-W.t,0)} sim-min`);
+    setText('tRoute',`${plan.from} → ${plan.to}`);setText('tRouteS',`donor ${plan.from} · Pump ${plan.pumpNo}`);
+    setText('tL',`${f(plan.L)} L`);setText('tLS',pm?`${f(pm.moved)} L moved`:`limit: ${plan.limBy}`);
+    setText('tSecs',`${f(plan.secs,1)} s`);setText('tSecsS',`= ${f(plan.secs*SIM_PER_REAL_S,0)} sim-min`);
+    setText('tPow',pct(plan.power));setText('tPowS',`PWM ${plan.pwm} · urgency ${f(cityById(W,plan.to).fc?.urgency??0,2)}`);
+    $('prog').style.width=pm?(pm.moved/pm.L*100)+'%':'0%';
+  }else{
+    setText('tWhen','—');setText('tWhenS',m==='SETTLING'?`decide at ${hhmm(ai.settleUntil)}`:' ');
+    setText('tRoute',last?`${last.from} → ${last.to}`:'—');setText('tRouteS',last?`last run ${hhmm(last.t)}`:' ');
+    setText('tL',last?`${f(last.moved||last.L)} L`:'—');setText('tLS',last?'last transfer':' ');
+    setText('tSecs',last?`${f(last.secs,1)} s`:'—');setText('tSecsS',' ');setText('tPow',last?pct(last.power):'—');setText('tPowS',' ');
+    $('prog').style.width=m==='SETTLING'?'100%':'0%';
+  }
+  $('prioBody').innerHTML=W.cities.map(c=>{const fc=c.fc;if(!fc)return'';return`<tr><td style="color:${COL[c.id]}">City ${c.id}</td><td style="color:${co2Color(c.obsC)}">${f(c.obsC,0)}${c.aiStatus!=='ok'?'*':''}</td><td>${p.predictive?f(fc.peakC,0):'—'}</td><td>${f(c.S)} L</td><td>${f(fc.need)} L</td><td style="color:${fc.needy?COL.red:'inherit'}">${f(fc.gap)}</td><td>${f(fc.spare)}</td><td>${f(fc.urgency,2)}</td><td>${f(fc.priority,1)}</td></tr>`;}).join('');
+  const al=$('sceneAlert');if(m==='CRITICAL'){al.style.display='block';al.textContent='⚠ CRITICAL: a city needs algae but no city can safely spare any. Pumps held; grow lights boosted where dark.';}else al.style.display='none';
+  for(const c of W.cities){const id=c.id,fc=c.fc,o=other(W,c);
+    const el=$('co2'+id);setText('co2'+id,f(c.C,0));el.style.color=co2Color(c.C);
+    const tr=trendOf(id);const te=$('trend'+id);te.textContent=`${tr>0.3?'▲':tr<-0.3?'▼':'▶'} ${tr>=0?'+':''}${f(tr,1)} ppm/min`;te.style.color=tr>0.3?COL.amber:tr<-0.3?COL.green:COL.muted;
+    setText('stk'+id,`${f(c.S)} L`);setText('need'+id,fc?`${f(fc.need)} L`:'—');setText('spr'+id,fc?`${f(fc.spare)} L`:'—');
+    setText('res'+id,`${f(p.reservePct/100*p.cap)} L`);setText('em'+id,c.Ehat!=null?`${f(c.Ehat,2)} ppm/min`:'—');setText('abs'+id,`${f(c.absorbRate,2)} ppm/min`);
+    let chip='OK',cls='ok';
+    if(pm&&pm.to===id){chip='RECEIVER';cls='recv';setRole(id,'recv','▲','RECEIVER · GETTING ALGAE',` ${f(pm.moved)} of ${f(pm.L)} L arriving from donor City ${pm.from} through Pump ${pm.pumpNo}`);}
+    else if(pm&&pm.from===id){chip='DONOR';cls='don';setRole(id,'don','▼','DONOR · GIVING ALGAE',` ${f(pm.moved)} of ${f(pm.L)} L sent to City ${pm.to}. Keeps at least ${f(Math.max(fc?fc.need:0,fc?fc.reserveL:0))} L (own need / reserve).`);}
+    else if(sc&&sc.to===id){chip='PRE-PUMP SCHEDULED';cls='sched';setRole(id,'sched','◷','RECEIVER · SCHEDULED',` ${f(sc.L)} L from donor City ${sc.from} at ${hhmm(sc.actAt)}`);}
+    else if(sc&&sc.from===id){chip='DONOR · SCHEDULED';cls='sched';setRole(id,'sched','◷','DONOR · SCHEDULED',` will give ${f(sc.L)} L to City ${sc.to} at ${hhmm(sc.actAt)}`);}
+    else if(fc&&fc.needy){chip='NEEDS ALGAE';cls='need';setRole(id,'need','!','NEEDS ALGAE',` short by ${f(fc.gap)} L${m==='CRITICAL'?' · no safe donor right now':''}`);}
+    else if(fc&&fc.atRisk){chip='AT RISK';cls='risk';setRole(id,'need','!','AT RISK',` CO₂ forecast above ${p.trigger} ppm, but no useful transfer (gap ${f(Math.max(0,fc.gap))} L)`);}
+    else if(fc&&fc.spare>=p.minTransfer){chip='CAN DONATE';cls='spare';setRole(id,'spare','⇄','CAN DONATE',` up to ${f(fc.spare)} L (keeps ${f(Math.max(fc.need,fc.reserveL))} L for itself)`);}
+    else setRole(id,'ok','✓','SELF-SUFFICIENT',fc?` has what it needs, but no spare above the reserve/own need`:'');
+    const ch=$('chip'+id);ch.className='chip '+cls;setText('chip'+id,chip);
+    const ev=[];if(c.eventEnd>W.t)ev.push(`☁ Pollution event: +${p.pollution} ppm/min, ${f(c.eventEnd-W.t,0)} sim-min left`);if(c.holding)ev.push(`☁ You are emitting +${p.pollution} ppm/min`);setText('evt'+id,ev.join(' · '));
+    setText('learn'+id,`learned ${Math.round(learnedPct(c)*24)}/24 h`);
+    // sensors
+    const s=c.sens,st=c.aiStatus||'ok';
+    setText('sC'+id,st==='ok'?`${f(readCO2(c),0)} ppm`:st==='dead'?`DEAD → est ${f(c.obsC,0)}`:`STUCK ${f(c.stuckVal,0)} → est ${f(c.obsC,0)}`);svCls('svC'+id,st!=='ok'?'bad':'');
+    setText('sL'+id,`${f(c.S)} L`);
+    setText('sT'+id,`${f(s.T,1)} °C`);svCls('svT'+id,s.fT<0.7?'bad':s.fT<1?'warn':'');
+    setText('sP'+id,f(s.ph,2));svCls('svP'+id,s.fpH<1?'warn':'');
+    setText('sU'+id,`${f(s.turb,0)} NTU`);svCls('svU'+id,s.fTu<1?'warn':'');
+    setText('sI'+id,`${f(s.light,0)} %`);svCls('svI'+id,s.light<p.lightSat?'warn':'');
+    setText('sH'+id,`${pct(s.health)} · m ${f(s.m,2)}`);svCls('svH'+id,s.health<0.7?'bad':s.health<0.95?'warn':'');
+    setText('sG'+id,c.lightOn?'ON':'off');svCls('svG'+id,c.lightOn?'on':'');
+    setText('flt'+id,`Sensor fault: ${c.fault==='ok'?'off':c.fault}`);
+  }
+  // weather line
+  const wx=[];if(cloudy(W))wx.push(`🌥 Cloudy: ${f((W.env.cloudEnd-W.t)/60,1)} h left`);if(hot(W))wx.push(`🌡 Heat wave: ${f((W.env.heatEnd-W.t)/60,1)} h left`);setText('wxLine',wx.join('  ·  ')||'Weather: normal');
+  // log
+  const key=W.log.length+'|'+(W.log[0]?W.log[0].t+W.log[0].msg:'');
+  if(key!==lastLogKey){lastLogKey=key;$('log').innerHTML=W.log.map(l=>`<div class="${l.type}"><time>${hhmm(l.t)}</time>${l.msg}</div>`).join('');}
+  // impact + energy
+  const [A,B]=W.cities,cmp=(a,b,u,d=0)=>`${f(a,d)}${u} <span style="color:#7c8f99">vs ${f(b,d)}</span>${a<b-0.05?' <span class="better">▼'+f(b-a,d)+'</span>':''}`;
+  $('impBody').innerHTML=
+   `<tr><td>Peak CO₂ (with vs without network)</td><td>${cmp(A.peak,A.peakG,'')}</td><td>${cmp(B.peak,B.peakG,'')}</td></tr>`+
+   `<tr><td>Minutes above danger (${p.danger} ppm)</td><td>${cmp(A.dangerMin,A.dangerMinG,'')}</td><td>${cmp(B.dangerMin,B.dangerMinG,'')}</td></tr>`+
+   `<tr><td>CO₂ now (with vs without)</td><td>${cmp(A.C,A.Cg,'')}</td><td>${cmp(B.C,B.Cg,'')}</td></tr>`+
+   `<tr><td>Algae received / donated</td><td>${f(A.received)} / ${f(A.donated)} L</td><td>${f(B.received)} / ${f(B.donated)} L</td></tr>`+
+   `<tr><td>CO₂ taken up by algae (ppm·min, model units)</td><td>${f(A.absorbed,0)}</td><td>${f(B.absorbed,0)}</td></tr>`+
+   `<tr><td>Grow-light time</td><td>${f(A.lightMin/60,1)} h</td><td>${f(B.lightMin/60,1)} h</td></tr>`;
+  const e=W.energy,bp=e.batt/p.batteryWh;
+  $('battBar').style.width=(bp*100)+'%';$('battBar').style.background=bp<=p.lowBatteryPct/100?'#ff5f5f':bp<0.4?'#f6b44a':'';setText('battPct',`${Math.round(bp*100)}%`);
+  setText('eSolar',`${f(e.solarW,0)} W`);setText('eLoad',`${f(e.loadW,0)} W`);const net=e.solarW-e.loadW;setText('eNet',`${net>=0?'+':''}${f(net,0)} W`);
+  $('netBody').innerHTML=`<tr><td>Pump runs / algae moved</td><td>${W.stats.runs} runs · ${f(W.stats.litres)} L</td></tr><tr><td>Total pump time</td><td>${f(W.stats.pumpSecs,1)} s</td></tr><tr><td>Solar energy collected</td><td>${f(e.solarWh,0)} Wh</td></tr><tr><td>Used by pumps / grow lights</td><td>${f(e.pumpWh,0)} / ${f(e.lightWh,0)} Wh</td></tr>`;
+  updateSteps();
+  // hero live console
+  setText('hClock',hhmm(W.t));setText('hDay',`Day ${Math.floor(Math.round(W.t)/1440)+1} · ${speed}× speed`);
+  const hm=$('hMode');setText('hMode',mk==='HOLD'?'HOLDING':m==='ARMED'?'PRE-PUMP':m);hm.style.color={MONITORING:COL.green,HOLD:COL.cyan,ARMED:COL.purple,PUMPING:COL.green,SETTLING:COL.amber,CRITICAL:COL.red}[mk];
+  setText('hTicks',`${ai.ticks} AI checks${pm?` · Pump ${pm.pumpNo} ${pm.from}→${pm.to}`:''}`);
+  for(const c of W.cities){const e=$('h'+c.id);setText('h'+c.id,f(c.C,0));e.style.color=co2Color(c.C);const tr=trendOf(c.id);setText('h'+c.id+'s',`ppm · ${tr>0.3?'rising':tr<-0.3?'falling':'steady'} · ${f(c.S,0)} L algae`);}
+  setText('hL',`${f(W.stats.litres)} L`);setText('hRuns',`${W.stats.runs} pump runs · battery ${Math.round(W.energy.batt/p.batteryWh*100)}%`);
+  setText('hTicker',W.log[0]?`› ${hhmm(W.log[0].t)}  ${W.log[0].msg}`:'› waiting for start…');
+}
+// ---- website navigation: scroll-spy, hero buttons, guided demo ----
+const NAV=[...document.querySelectorAll('#navLinks a')];
+function spy(){let cur='top';for(const a of NAV){const id=a.getAttribute('href').slice(1),el=$(id);if(el&&el.getBoundingClientRect().top<140)cur=id;}if(innerHeight+scrollY>=document.documentElement.scrollHeight-40)cur='hardware';NAV.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));}
+window.addEventListener('scroll',spy,{passive:true});
+const go=id=>$(id).scrollIntoView({behavior:'smooth'});
+$('heroStart').onclick=()=>{go('sim');setRunning(true);};
+$('heroHw').onclick=()=>go('hardware');
+$('navConnect').onclick=async()=>{if(HW.connected){go('hardware');return;}go('hardware');await hwAutoConnect('button');if(!HW.connected)await hwConnect();};
+const TOUR=[
+ {h:'Start the city clock',p:'The simulation starts at 05:00. Watch the AI learn that City A has a morning rush hour, schedule a pre-pump (purple route) and send algae from donor B to receiver A before CO₂ crosses 675 ppm.',sec:'sim',act:()=>{speed=2;[...$('speedSeg').children].forEach(b=>b.classList.toggle('on',+b.dataset.s===2));setRunning(true);}},
+ {h:'Pollute City A',p:'A pollution event adds 10 ppm/min of CO₂ for 90 simulated minutes. The AI recalculates the gap, checks City B\'s spare algae and starts Pump 1. Watch A\'s tank rise first, then its CO₂ bend down.',sec:'sim',act:()=>{polluteCity(W,'A');setRunning(true);}},
+ {h:'Reverse the flow',p:'Now City B gets polluted. City A becomes the donor and Pump 2 sends algae the other way, A → B. Check the role banners on the city cards.',sec:'sim',act:()=>{polluteCity(W,'B');setRunning(true);}},
+ {h:'Pollute both cities',p:'When both cities need algae, nobody can safely donate. The AI ranks them by urgency × population, holds the pumps (CRITICAL) and switches on grow lights where it is dark.',sec:'sim',act:()=>{polluteCity(W,'A');polluteCity(W,'B');setRunning(true);}},
+ {h:'Break a sensor',p:'City A\'s CO₂ sensor gets stuck. The AI notices the reading never changes, raises an alert and keeps working from a model estimate (marked with *).',sec:'brain',act:()=>{setFault(W,'A','stuck');setRunning(true);}},
+ {h:'Connect the real pumps',p:'Plug in the Arduino and press Connect. The same decisions now drive the real L298N pumps. Use Test pump 1 and 2 first to check the wiring.',sec:'hardware',act:()=>{$('navConnect').click();}}];
+let tourI=0;
+function showTour(i){tourI=clamp(i,0,TOUR.length-1);const t=TOUR[tourI];$('tour').classList.add('on');setText('tourN',`GUIDED DEMO · ${tourI+1}/${TOUR.length}`);setText('tourH',t.h);setText('tourP',t.p);$('tourBar').style.width=((tourI+1)/TOUR.length*100)+'%';$('tourBack').disabled=tourI===0;setText('tourNext',tourI===TOUR.length-1?'Finish':'Next →');go(t.sec);}
+$('heroTour').onclick=()=>showTour(0);
+$('tourX').onclick=()=>$('tour').classList.remove('on');
+$('tourBack').onclick=()=>showTour(tourI-1);
+$('tourNext').onclick=()=>{if(tourI===TOUR.length-1)$('tour').classList.remove('on');else showTour(tourI+1);};
+$('tourDo').onclick=()=>{TOUR[tourI].act();addLog(W,'ok',`Guided demo step ${tourI+1}: ${TOUR[tourI].h}.`);};
+function updateSteps(){
+  const p=W.p,ai=W.ai,[A,B]=W.cities,since=realTime-stepAnimT;
+  let act=since<1.6?1+Math.min(3,Math.floor(since/0.4)):0;
+  if(ai.mode==='PUMPING')act=5;else if(!act&&(ai.mode==='ARMED'||ai.mode==='CRITICAL'))act=4;else if(!act&&ai.mode==='SETTLING')act=5;
+  for(let i=1;i<=5;i++)$('st'+i).classList.toggle('on',i===act);
+  const sline=c=>`${c.id}: CO₂ ${f(c.obsC,0)}${c.aiStatus!=='ok'?'* ('+c.aiStatus+', estimate)':' ✓'} · ${f(c.S,0)} L · ${f(c.sens.T,1)}°C · pH ${f(c.sens.ph,1)} · ${f(c.sens.turb,0)} NTU · light ${f(c.sens.light,0)}%`;
+  setText('lv1',`${sline(A)}\n${sline(B)}`);
+  setText('lv2',W.cities.map(c=>`${c.id}: ${f(c.Ehat,2)} ppm/min · pattern ${Math.round(learnedPct(c)*24)}/24 h`).join('\n'));
+  setText('lv3',!p.predictive?'Prediction is OFF (reactive mode)':W.cities.map(c=>c.fc?`${c.id}: peak ${f(c.fc.peakC,0)} ppm · ${c.fc.crossT!=null?'crosses '+p.trigger+' at '+hhmm(c.fc.crossT):'stays below trigger'} · needs ${f(c.fc.need,0)} L`:`${c.id}: —`).join('\n'));
+  const needy=W.cities.filter(c=>c.fc&&c.fc.needy).sort((a,b)=>b.fc.priority-a.fc.priority);
+  setText('lv4',needy.length?needy.map(c=>`Receiver ${c.id}: ${f(c.fc.urgency,2)} × ${popOf(W,c)}k = ${f(c.fc.priority,1)}`).join('\n')+`\n`+W.cities.filter(c=>!needy.includes(c)).map(c=>`Donor check ${c.id}: spare ${f(c.fc.spare)} L (min ${p.minTransfer} L)`).join('\n'):`No receiver needed.\nSpare: A ${f(A.fc?.spare)} L · B ${f(B.fc?.spare)} L`);
+  const pm=W.pump,sc=ai.mode==='ARMED'?ai.scheduled:null;
+  setText('lv5',pm?`Pump ${pm.pumpNo} ${pm.from}→${pm.to}: ${pct(pm.power)} (PWM ${pm.pwm}) · ${f(pm.L)} L × ${p.secPerL} ÷ ${f(pm.power,2)} = ${f(pm.secs,1)} s\n${f(pm.moved)} L delivered`:sc?`Pre-pump at ${hhmm(sc.actAt)} (crossing − ${p.leadMin} min)\n${f(sc.L)} L, ${f(sc.secs,1)} s, ${pct(sc.power)}`:ai.mode==='SETTLING'?'Pump stopped, letting algae mix':'Pumps off · deficit closed or none');
+}
+
+// ===================== LOOP =====================
+let lastTs=null,frameN=0;
+function frame(ts){
+  if(lastTs==null)lastTs=ts;const rdt=Math.min(0.1,(ts-lastTs)/1000);lastTs=ts;realTime+=rdt;
+  if(running){simAcc+=rdt*SIM_PER_REAL_S*speed;let n=0;while(simAcc>=DT&&n<400){stepWorld(W,DT);simAcc-=DT;n++;}}
+  hwSync();updateParticles(rdt);drawScene();updatePins();
+  if(frameN++%3===0){updatePanels();drawCityChart('A');drawCityChart('B');drawPattern('A');drawPattern('B');drawTimeline();}
+  requestAnimationFrame(frame);
+}
+syncSliders();buildAsm();updRndInfo();reset();updateMode();
+con('Hardware link ready. Demo mode drives the virtual pins.');
+if(HW.auto)hwAutoConnect('load');
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
